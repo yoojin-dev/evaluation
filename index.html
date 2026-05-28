@@ -163,6 +163,10 @@
   .pdot.done{background:var(--good);border-color:var(--good);color:#fff}
   .pdot.cur{background:var(--accent);border-color:var(--accent);color:#fff;transform:scale(1.12);box-shadow:0 0 0 3px var(--accent-soft)}
   .pcount{font-size:13px;font-weight:600;color:var(--muted);margin-bottom:10px}
+  .subm-chip{display:inline-flex;align-items:center;gap:4px;font-size:13px;font-weight:600;padding:5px 11px;border-radius:20px}
+  .subm-chip.done{background:#e1f5ee;color:#0f6e56;cursor:pointer;transition:.12s}
+  .subm-chip.done:hover{background:#0f6e56;color:#fff}
+  .subm-chip.pending{background:#faece7;color:#993c1d;border:1px solid #f0997b}
   .person-eval{border:1px solid var(--line);border-radius:14px;margin-bottom:18px;overflow:hidden;box-shadow:var(--shadow)}
   .person-head{background:linear-gradient(135deg,#4f46e5,#6d28d9);color:#fff;padding:13px 16px;font-family:'Be Vietnam Pro',sans-serif;font-size:17px;font-weight:700;display:flex;justify-content:space-between;align-items:center}
   .person-head .done{font-family:'IBM Plex Sans KR';font-size:12px;font-weight:400;opacity:.9}
@@ -734,19 +738,42 @@ function renderAdmin(){
   <div class="divider"></div>
   <h2 class="section">제출 현황 (1인 1회)</h2>
   <div class="card">
-    <p class="hint" style="margin-bottom:10px">제출을 완료한 사람은 다시 평가할 수 없습니다. 실수로 제출한 경우, 아래에서 해당 인원의 제출 잠금을 풀어 재평가를 허용할 수 있습니다.</p>`;
-  const submittedList=[];
-  CONFIG.teams.forEach(t=>t.members.forEach(m=>{ if(SUBMITTED[m.id]) submittedList.push({m,t}); }));
-  if(submittedList.length===0){
-    h+=`<p class="hint" style="margin:0">아직 제출한 인원이 없습니다.</p>`;
+    <p class="hint" style="margin-bottom:12px">누가 제출했고 누가 아직 안 했는지 한눈에 볼 수 있습니다. 실수로 제출한 경우, 제출 완료자 옆 버튼으로 잠금을 풀어 재평가를 허용할 수 있습니다.</p>`;
+  // count totals
+  let totalMembers=0, totalDone=0;
+  CONFIG.teams.forEach(t=>t.members.forEach(m=>{ totalMembers++; if(SUBMITTED[m.id]) totalDone++; }));
+  const pct = totalMembers? Math.round(totalDone/totalMembers*100) : 0;
+  if(totalMembers===0){
+    h+=`<p class="hint" style="margin:0">아직 등록된 인원이 없습니다.</p>`;
   } else {
-    h+=`<p class="hint" style="margin-bottom:8px">제출 완료: <b>${submittedList.length}명</b></p>`;
-    submittedList.forEach(({m,t})=>{
-      h+=`<div class="row" style="margin:4px 0;align-items:center">
-        <span style="flex:1;font-size:13px">✅ ${esc(m.name)} <span class="hint" style="margin:0">(${esc(t.name)})</span></span>
-        <button class="btn danger sm" onclick="unlockSubmission('${m.id}','${esc(m.name).replace(/'/g,"\\'")}')">제출 잠금 해제</button>
+    // overall progress
+    h+=`<div style="background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:12px 14px;margin-bottom:12px">
+        <div style="font-size:13px;color:var(--muted)">전체 진행률</div>
+        <div style="font-family:'Be Vietnam Pro',sans-serif;font-size:22px;font-weight:700">${totalDone} / ${totalMembers}명 <span style="font-size:14px;font-weight:500;color:var(--muted)">제출 완료 (${pct}%)</span></div>
+        <div style="height:8px;background:#eef0f5;border-radius:20px;overflow:hidden;margin-top:8px">
+          <div style="width:${pct}%;height:100%;background:linear-gradient(90deg,var(--gold),var(--good))"></div>
+        </div>
       </div>`;
+    // per team
+    CONFIG.teams.forEach(t=>{
+      if(!t.members.length) return;
+      const doneCount=t.members.filter(m=>SUBMITTED[m.id]).length;
+      h+=`<div style="margin-bottom:16px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+          <span style="font-weight:600">${esc(t.name)}</span>
+          <span class="hint" style="margin:0">${doneCount} / ${t.members.length}명</span>
+        </div>
+        <div style="display:flex;flex-wrap:wrap;gap:6px">`;
+      t.members.forEach(m=>{
+        if(SUBMITTED[m.id]){
+          h+=`<span class="subm-chip done" onclick="unlockSubmission('${m.id}','${esc(m.name).replace(/'/g,"\\'")}')" title="클릭하면 제출 잠금 해제">✓ ${esc(m.name)}</span>`;
+        } else {
+          h+=`<span class="subm-chip pending">⏳ ${esc(m.name)} · 미제출</span>`;
+        }
+      });
+      h+=`</div></div>`;
     });
+    h+=`<p class="hint" style="margin:4px 0 0">※ 초록색(제출 완료) 이름을 클릭하면 제출 잠금을 해제할 수 있습니다.</p>`;
   }
   h+=`</div>
 
@@ -2136,7 +2163,7 @@ function applyBranding(){
     if(CONFIG.logoUrl && CONFIG.logoUrl.trim())
       fh+=`<img src="${esc(CONFIG.logoUrl.trim())}" alt="logo" onerror="this.style.display='none'">`;
     const ft=(CONFIG.footerText||'').trim();
-    fh+=`<div class="foot-text">${ft?esc(ft):''} <span style="opacity:.5">· v10</span></div>`;
+    fh+=`<div class="foot-text">${ft?esc(ft):''} <span style="opacity:.5">· v11</span></div>`;
     f.innerHTML=fh;
   }
 }
