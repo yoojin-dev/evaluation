@@ -1,0 +1,2163 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>다면 상호평가</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@300;400;500;600;700&family=Be+Vietnam+Pro:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1a1d29;
+    --paper:#f4f5f8;
+    --card:#ffffff;
+    --line:#e3e6ee;
+    --muted:#79808f;
+    --accent:#4f46e5;
+    --accent-soft:#e8e7fb;
+    --gold:#0ea5a4;
+    --good:#16a34a;
+    --shadow:0 1px 2px rgba(26,29,41,.04),0 10px 30px -14px rgba(26,29,41,.20);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    font-family:'IBM Plex Sans KR',sans-serif;
+    background:var(--paper);
+    color:var(--ink);
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+    background-image:radial-gradient(140% 90% at 50% 0%, #eef0fb 0%, var(--paper) 46%);
+    background-attachment:fixed;
+    min-height:100vh;
+  }
+  .wrap{max-width:880px;margin:0 auto;padding:0 20px 80px}
+  header.top{
+    border-bottom:1px solid var(--line);
+    padding:26px 0 18px;margin-bottom:8px;
+    display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:12px;
+  }
+  .brand{font-family:'Be Vietnam Pro',sans-serif;font-size:28px;font-weight:800;letter-spacing:-.6px;color:var(--ink)}
+  .brand small{display:block;font-family:'IBM Plex Sans KR';font-size:11px;font-weight:500;color:var(--accent);letter-spacing:3px;margin-top:3px}
+  nav.tabs{display:flex;gap:3px;background:#eceef5;border:1px solid var(--line);border-radius:10px;padding:4px;flex-shrink:0}
+  nav.tabs button{
+    font-family:'IBM Plex Sans KR';font-weight:600;font-size:13px;
+    border:none;background:transparent;color:var(--muted);
+    padding:9px 15px;cursor:pointer;border-radius:7px;transition:.15s;
+  }
+  nav.tabs button.active{background:#fff;color:var(--accent);box-shadow:0 1px 3px rgba(26,29,41,.12)}
+  nav.tabs button:hover:not(.active){color:var(--ink)}
+
+  .view{display:none;animation:fade .3s ease}
+  .view.active{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+  h2.section{font-family:'Be Vietnam Pro',sans-serif;font-size:21px;font-weight:700;margin:30px 0 4px;display:flex;align-items:center;gap:10px;letter-spacing:-.3px}
+  h2.section::before{content:"";width:16px;height:3px;border-radius:3px;background:var(--accent)}
+  .hint{color:var(--muted);font-size:13px;margin-bottom:16px}
+
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px;margin-bottom:14px;box-shadow:var(--shadow)}
+  .card.tight{padding:14px 16px}
+
+  label.fld{display:block;font-size:12px;font-weight:600;color:var(--muted);letter-spacing:.3px;margin:0 0 5px}
+  input[type=text],input[type=number],input[type=password],input[type=tel],textarea,select{
+    width:100%;font-family:'IBM Plex Sans KR';font-size:14px;color:var(--ink);
+    background:#fbfbfd;border:1.5px solid var(--line);border-radius:9px;
+    padding:10px 12px;transition:.15s;
+  }
+  input:focus,textarea:focus,select:focus{outline:none;border-color:var(--accent);background:#fff;box-shadow:0 0 0 3px var(--accent-soft)}
+  textarea{resize:vertical;min-height:70px;line-height:1.6}
+
+  button.btn{
+    font-family:'IBM Plex Sans KR';font-weight:600;font-size:13px;cursor:pointer;
+    border:1.5px solid var(--accent);background:var(--accent);color:#fff;
+    padding:9px 16px;border-radius:9px;transition:.15s;
+  }
+  button.btn:hover{background:#4338ca;border-color:#4338ca;transform:translateY(-1px)}
+  button.btn.ghost{background:#fff;color:var(--ink);border-color:var(--line)}
+  button.btn.ghost:hover{background:var(--accent-soft);color:var(--accent);border-color:var(--accent-soft);transform:none}
+  button.btn.sm{padding:6px 11px;font-size:12px;border-radius:8px}
+  button.btn.danger{border-color:#fecaca;color:#dc2626;background:#fff}
+  button.btn.danger:hover{background:#dc2626;color:#fff;border-color:#dc2626;transform:none}
+  .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+  .grow{flex:1;min-width:120px}
+
+  .chip{display:inline-flex;align-items:center;gap:6px;background:var(--accent-soft);color:var(--accent);
+    font-size:12px;font-weight:600;padding:4px 10px;border-radius:20px;margin:3px 4px 3px 0}
+  .chip b{font-weight:700}
+  .chip .x{cursor:pointer;font-weight:800;opacity:.6}
+  .chip .x:hover{opacity:1}
+
+  .team-block{border-left:3px solid var(--gold);padding-left:14px;margin-bottom:18px}
+  .roster{width:100%;border-collapse:collapse;margin:6px 0 4px;font-size:13px;min-width:420px}
+  .roster th{text-align:left;font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.3px;
+    padding:4px 6px;border-bottom:1.5px solid var(--line)}
+  .roster td{padding:4px 6px;border-bottom:1px dashed var(--line);vertical-align:middle}
+  .roster input{width:100%;font-family:'IBM Plex Sans KR';font-size:13px;color:var(--ink);
+    background:#fbfbfd;border:1.5px solid var(--line);border-radius:7px;padding:7px 8px}
+  .roster input:focus{outline:none;border-color:var(--accent);background:#fff}
+  .roster td:last-child{width:1%;white-space:nowrap}
+  .team-name{font-family:'Be Vietnam Pro',sans-serif;font-size:18px;font-weight:700;margin-bottom:6px;display:flex;align-items:center;gap:8px}
+
+  .q-item{border:1px solid var(--line);border-radius:3px;padding:14px;margin-bottom:10px;background:var(--card)}
+  .q-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+  .q-type-badge{font-size:11px;font-weight:700;letter-spacing:.3px;padding:3px 9px;border-radius:20px;white-space:nowrap}
+  .t-score{background:#dcfce7;color:#15803d}
+  .t-likert{background:#e0f2fe;color:#0369a1}
+  .t-req{background:var(--accent);color:#fff}
+  .t-opt{background:#eef0f5;color:var(--muted)}
+  .req-star{color:var(--accent);font-weight:800;font-size:16px}
+  .t-text{background:#f3e8ff;color:#7e22ce}
+  .t-choice{background:#ccfbf1;color:#0f766e}
+  .q-title{font-weight:600;font-size:15px}
+  .q-meta{font-size:12px;color:var(--muted);margin-top:3px}
+
+  .opt-line{display:flex;gap:8px;align-items:center;margin-top:6px}
+  .opt-line img{width:38px;height:38px;object-fit:cover;border-radius:7px;border:1px solid var(--line)}
+
+  /* scale buttons */
+  .scale{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+  .scale button{
+    min-width:42px;height:42px;border:1.5px solid var(--line);background:#fff;
+    border-radius:9px;font-family:'IBM Plex Sans KR';font-weight:600;font-size:15px;cursor:pointer;transition:.12s;color:var(--ink)
+  }
+  .scale button:hover{border-color:var(--accent)}
+  .scale button.sel{background:var(--accent);border-color:var(--accent);color:#fff}
+
+  /* likert — slider/track style */
+  .lk-scale-head{margin:12px 12px 2px}
+  .lk-scale-inner{position:relative;height:46px}
+  .lk-scale-lbl{position:absolute;top:0;transform:translateX(-50%);
+    display:flex;flex-direction:column;align-items:center;gap:3px;width:70px;
+    font-size:11px;font-weight:600;text-align:center;line-height:1.15}
+  .lk-scale-txt{display:block;word-break:keep-all}
+  .lk-score{display:flex;align-items:center;justify-content:center;width:20px;height:20px;
+    border-radius:50%;color:#fff;font-size:11px;font-weight:800;flex-shrink:0}
+  .lk-item{margin:6px 0 16px}
+  .lk-item-name{font-size:13px;font-weight:600;color:var(--ink);margin-bottom:10px}
+  .lk-track{position:relative;height:30px;margin:0 12px}
+  .lk-line{position:absolute;top:50%;left:0;right:0;height:4px;transform:translateY(-50%);
+    border-radius:4px;background:linear-gradient(90deg,hsl(0,72%,58%),hsl(45,90%,55%),hsl(150,60%,45%))}
+  .lk-node{position:absolute;top:50%;transform:translate(-50%,-50%);
+    width:22px;height:22px;border-radius:50%;border:2.5px solid #cbd0db;background:#fff;
+    cursor:pointer;padding:0;transition:transform .12s,border-color .12s,background .12s;z-index:1}
+  .lk-node:hover{border-color:var(--c);transform:translate(-50%,-50%) scale(1.25)}
+  .lk-node.sel{border-color:var(--c);background:var(--c);
+    box-shadow:0 0 0 4px #fff, 0 0 0 6px var(--c);
+    transform:translate(-50%,-50%) scale(1.3)}
+
+  .choice-opt{display:flex;align-items:center;gap:10px;border:1.5px solid var(--line);border-radius:10px;
+    padding:11px;margin-top:8px;cursor:pointer;background:#fff;transition:.12s}
+  .choice-opt:hover{border-color:var(--accent)}
+  .choice-opt.sel{border-color:var(--accent);background:var(--accent-soft)}
+  .choice-opt img{width:60px;height:60px;object-fit:cover;border-radius:8px;border:1px solid var(--line)}
+  .choice-radio{width:18px;height:18px;border-radius:50%;border:2px solid var(--muted);flex-shrink:0}
+  .choice-opt.sel .choice-radio{border-color:var(--accent);background:var(--accent);box-shadow:inset 0 0 0 3px #fff}
+  .choice-check{width:18px;height:18px;border-radius:5px;border:2px solid var(--muted);flex-shrink:0;position:relative}
+  .choice-opt.sel .choice-check{border-color:var(--accent);background:var(--accent)}
+  .choice-opt.sel .choice-check::after{content:"✓";position:absolute;inset:0;color:#fff;font-size:13px;font-weight:800;display:flex;align-items:center;justify-content:center}
+
+  .pdots{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0 4px}
+  .pdot{width:30px;height:30px;border-radius:50%;border:1.5px solid var(--line);background:#fff;
+    font-size:12px;font-weight:700;color:var(--muted);cursor:pointer;transition:.12s}
+  .pdot.done{background:var(--good);border-color:var(--good);color:#fff}
+  .pdot.cur{background:var(--accent);border-color:var(--accent);color:#fff;transform:scale(1.12);box-shadow:0 0 0 3px var(--accent-soft)}
+  .pcount{font-size:13px;font-weight:600;color:var(--muted);margin-bottom:10px}
+  .person-eval{border:1px solid var(--line);border-radius:14px;margin-bottom:18px;overflow:hidden;box-shadow:var(--shadow)}
+  .person-head{background:linear-gradient(135deg,#4f46e5,#6d28d9);color:#fff;padding:13px 16px;font-family:'Be Vietnam Pro',sans-serif;font-size:17px;font-weight:700;display:flex;justify-content:space-between;align-items:center}
+  .person-head .done{font-family:'IBM Plex Sans KR';font-size:12px;font-weight:400;opacity:.9}
+  .person-body{padding:16px;background:#fff}
+  .qrow{padding:12px 0;border-bottom:1px dashed var(--line)}
+  .qrow-follow{margin-left:14px;padding-left:14px;border-left:3px solid var(--accent-soft);border-bottom:1px dashed var(--line)}
+  .follow-tag{font-size:11px;font-weight:700;color:var(--accent);margin-bottom:4px;letter-spacing:.2px}
+  .qrow:last-child{border-bottom:none}
+
+  .empty{text-align:center;color:var(--muted);padding:40px 20px;font-size:14px}
+  .empty .big{font-size:30px;display:block;margin-bottom:8px}
+
+  /* results */
+  .res-person{margin-bottom:24px}
+  .res-q{margin:10px 0 14px}
+  .res-q .lbl{font-weight:600;font-size:14px;margin-bottom:6px}
+  .bar-wrap{display:flex;align-items:center;gap:10px;margin:3px 0}
+  .bar-name{width:80px;font-size:12px;color:var(--muted);text-align:right;flex-shrink:0}
+  .bar-track{flex:1;height:18px;background:#eef0f5;border-radius:20px;overflow:hidden;border:1px solid var(--line)}
+  .bar-fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--accent));border-radius:20px;transition:width .5s}
+  .bar-val{width:48px;font-size:12px;font-weight:700;flex-shrink:0}
+  .avg-big{font-family:'Be Vietnam Pro',sans-serif;font-size:34px;font-weight:800;color:var(--accent)}
+  .quote{border-left:3px solid var(--accent-soft);padding:4px 0 4px 12px;margin:6px 0;font-size:13px;color:#3b3f4a}
+  .quote b{color:var(--muted);font-weight:700;font-size:11px}
+  .tally{display:flex;align-items:center;gap:8px;margin:4px 0;font-size:13px}
+  .tally .n{font-weight:700;color:var(--accent);min-width:24px}
+
+  .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);
+    background:var(--ink);color:#fff;padding:12px 22px;border-radius:10px;font-size:14px;font-weight:600;
+    opacity:0;pointer-events:none;transition:.3s;z-index:99;box-shadow:0 10px 30px -8px rgba(26,29,41,.45)}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+  .modal-overlay{position:fixed;inset:0;background:rgba(26,29,41,.5);display:none;backdrop-filter:blur(2px);
+    align-items:center;justify-content:center;z-index:200;padding:20px}
+  .modal-overlay.show{display:flex}
+  .modal-box{background:var(--card);border:1px solid var(--line);border-radius:16px;
+    padding:24px;max-width:380px;width:100%;box-shadow:0 24px 60px -12px rgba(26,29,41,.45)}
+  .modal-msg{font-size:15px;font-weight:500;line-height:1.55;margin-bottom:18px;white-space:pre-line}
+  .modal-input{width:100%;font-family:'IBM Plex Sans KR';font-size:15px;color:var(--ink);
+    background:#fbfbfd;border:1.5px solid var(--line);border-radius:9px;padding:10px 12px;margin-bottom:18px}
+  .modal-input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+  .modal-btns{display:flex;gap:8px;justify-content:flex-end}
+
+  .preview-overlay{position:fixed;inset:0;background:rgba(26,29,41,.5);display:none;backdrop-filter:blur(2px);
+    align-items:flex-start;justify-content:center;z-index:250;padding:20px;overflow-y:auto}
+  .preview-overlay.show{display:flex}
+  .preview-box{background:var(--paper);border-radius:16px;max-width:620px;width:100%;margin:auto;
+    box-shadow:0 24px 60px -12px rgba(26,29,41,.5);overflow:hidden}
+  .preview-bar{display:flex;align-items:center;justify-content:space-between;gap:10px;
+    padding:14px 18px;background:var(--accent);color:#fff}
+  .preview-title{font-weight:700;font-size:15px}
+  .preview-bar .btn.ghost{background:rgba(255,255,255,.15);border-color:rgba(255,255,255,.4);color:#fff}
+  .preview-body{padding:18px;max-height:78vh;overflow-y:auto}
+  .busy-overlay{position:fixed;inset:0;background:rgba(26,29,41,.55);display:none;backdrop-filter:blur(2px);
+    align-items:center;justify-content:center;z-index:300}
+  .busy-overlay.show{display:flex}
+  .busy-box{background:var(--card);border-radius:16px;padding:28px 36px;text-align:center;
+    box-shadow:0 24px 60px -12px rgba(26,29,41,.45);display:flex;flex-direction:column;align-items:center;gap:16px}
+  .busy-spinner{width:38px;height:38px;border:4px solid var(--accent-soft);border-top-color:var(--accent);
+    border-radius:50%;animation:busy-spin .8s linear infinite}
+  @keyframes busy-spin{to{transform:rotate(360deg)}}
+  .busy-msg{font-size:15px;font-weight:600;color:var(--ink)}
+
+  .divider{height:1px;background:var(--line);margin:20px 0}
+  details.adv{margin-top:8px}
+  details.adv summary{cursor:pointer;font-size:12px;font-weight:600;color:var(--accent)}
+  .pin-input{max-width:140px}
+  .loadnote{text-align:center;color:var(--muted);padding:30px;font-size:13px}
+  .app-footer{margin-top:36px;padding-top:22px;border-top:1px solid var(--line);
+    display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center}
+  .app-footer img{max-height:38px;max-width:180px;object-fit:contain;opacity:.9}
+  .app-footer .foot-text{font-size:12px;color:var(--muted)}
+
+  /* ============ RESPONSIVE ============ */
+  @media (max-width:640px){
+    .wrap{padding:0 14px 60px}
+    header.top{flex-direction:column;align-items:stretch;padding:18px 0 14px;gap:14px}
+    .brand{font-size:24px;text-align:center}
+    .brand small{letter-spacing:2px}
+    nav.tabs{width:100%}
+    nav.tabs button{flex:1;padding:10px 4px;font-size:13px}
+    h2.section{font-size:19px;margin:24px 0 4px}
+    .avg-big{font-size:28px}
+    .card{padding:14px}
+    /* score buttons fill the row evenly so they never overflow */
+    .scale button{flex:1 1 0;min-width:0;height:46px;font-size:16px}
+    /* results bars: stack name above the track on narrow screens */
+    .bar-name{width:auto;text-align:left;flex-basis:100%}
+    .bar-wrap{flex-wrap:wrap;gap:4px 8px}
+    .bar-track{flex:1 1 60%}
+    .person-head{font-size:16px;flex-wrap:wrap;gap:4px}
+    .choice-opt img{width:48px;height:48px}
+    input,textarea,select,button{font-size:16px} /* 16px stops iOS auto-zoom */
+    select[style]{max-width:none !important}
+    .pin-input{max-width:none}
+    /* likert: narrower labels so 4-5 points don't overlap; smaller nodes */
+    .lk-scale-lbl{width:52px;font-size:10px}
+    .lk-scale-head{margin:12px 10px 2px}
+    .lk-track{margin:0 10px}
+    .lk-node{width:20px;height:20px}
+    /* result-header action buttons wrap neatly */
+    .res-actions{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+    /* member add row stacks; inputs go full width */
+    .addrow input{max-width:none !important;flex:1 1 100%}
+  }
+  @media (max-width:380px){
+    .brand{font-size:21px}
+    .scale button{height:42px;font-size:15px}
+    .chip{font-size:11px}
+    .lk-scale-lbl{width:44px;font-size:9px}
+    .lk-score{width:18px;height:18px;font-size:10px}
+    .lk-node{width:18px;height:18px}
+  }
+  /* prevent any wide element from breaking layout on small phones */
+  img,table{max-width:100%}
+  input,textarea,select{max-width:100%}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="brand" id="brandTitle">다면 상호평가<small>PEER · 360° EVALUATION</small></div>
+    <nav class="tabs">
+      <button id="tab-eval" class="active" onclick="switchView('eval')">평가하기</button>
+      <button id="tab-result" onclick="switchView('result')">결과</button>
+      <button id="tab-admin" onclick="switchView('admin')">관리자</button>
+    </nav>
+  </header>
+
+  <div id="loading" class="loadnote">불러오는 중…</div>
+
+  <!-- ============ EVALUATE ============ -->
+  <section id="view-eval" class="view active"></section>
+
+  <!-- ============ RESULT ============ -->
+  <section id="view-result" class="view"></section>
+
+  <!-- ============ ADMIN ============ -->
+  <section id="view-admin" class="view"></section>
+
+  <footer id="appFooter" class="app-footer"></footer>
+<div id="preview" class="preview-overlay">
+  <div class="preview-box">
+    <div class="preview-bar">
+      <span class="preview-title">👁 문항 미리보기 <span style="font-weight:400;opacity:.8">· 저장되지 않습니다</span></span>
+      <button class="btn ghost sm" onclick="closePreview()">닫기 ✕</button>
+    </div>
+    <div id="previewBody" class="preview-body"></div>
+  </div>
+</div>
+<div id="busy" class="busy-overlay">
+  <div class="busy-box">
+    <div class="busy-spinner"></div>
+    <div id="busyMsg" class="busy-msg">제출 중입니다…</div>
+  </div>
+</div>
+</div>
+
+<div id="toast" class="toast"></div>
+
+<div id="modal" class="modal-overlay">
+  <div class="modal-box">
+    <div id="modalMsg" class="modal-msg"></div>
+    <input type="text" id="modalInput" class="modal-input" style="display:none">
+    <div class="modal-btns">
+      <button class="btn ghost" id="modalCancel">취소</button>
+      <button class="btn" id="modalOk">확인</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ---------------- storage layer ---------------- */
+const SHARED = true;
+const CFG_KEY = 'eval_config_v1';
+const RESP_KEY = 'eval_responses_v1';
+const SUB_KEY = 'eval_submitted_v1';
+const BACKEND_KEY = 'eval_backend_url_v1'; // stored locally so this device remembers the sheet
+
+let CONFIG = { teams: [], questions: [], sheetUrl: '' };
+let RESPONSES = {}; // RESPONSES[evaluatorId][evaluateeId][questionId] = value
+let SUBMITTED = {}; // SUBMITTED[evaluatorId] = true  (one-time submission lock)
+let BACKEND_URL = ''; // Google Apps Script web app URL = shared backend
+
+function backendActive(){ return /^https:\/\/script\.google\.com\/macros\/s\/.+\/exec$/.test((BACKEND_URL||'').trim()); }
+
+/* ---- local (per-device) cache via window.storage ---- */
+async function localGet(key){ try{ const r=await window.storage.get(key,SHARED); return r&&r.value?JSON.parse(r.value):null; }catch(e){ return null; } }
+async function localSet(key,val){ try{ await window.storage.set(key,JSON.stringify(val),SHARED); }catch(e){} }
+
+/* ---- shared backend (Google Sheet) ---- */
+async function backendLoad(){
+  // add timestamp to bypass Apps Script's GET response cache (up to 6hr)
+  const url=BACKEND_URL.trim()+'?t='+Date.now();
+  const res=await fetch(url,{method:'GET'});
+  const data=await res.json();
+  return data; // {config, responses, submitted, roster}
+}
+async function backendSave(kind, payload, mode){
+  // mode: 'merge' (default) adds/updates keys; 'replace' overwrites the whole blob
+  try{
+    await fetch(BACKEND_URL.trim(),{
+      method:'POST', mode:'no-cors',
+      headers:{'Content-Type':'text/plain;charset=utf-8'},
+      body:JSON.stringify({kind, payload, mode: mode||'merge'})
+    });
+    return true;
+  }catch(e){ return false; }
+}
+
+async function loadLocalFast(){
+  // load instantly from this device's cache (no network) so the screen appears fast
+  BACKEND_URL='https://script.google.com/macros/s/AKfycbzeScoAfdo5EPYgkkcgkiAWyVnC7_L4SEad9x1FXfVxmD8q5xAmm1SSpDw9kynNlMZ4OA/exec';
+  const savedUrl=await localGet(BACKEND_KEY); if(typeof savedUrl==='string' && savedUrl.trim()) BACKEND_URL=savedUrl;
+  const c=await localGet(CFG_KEY); if(c) CONFIG=c;
+  const r=await localGet(RESP_KEY); if(r) RESPONSES=r;
+  const s=await localGet(SUB_KEY); if(s) SUBMITTED=s;
+  applyDefaults();
+}
+async function loadAll(){
+  // default shared backend (so every device auto-connects via the same link)
+  BACKEND_URL='https://script.google.com/macros/s/AKfycbzeScoAfdo5EPYgkkcgkiAWyVnC7_L4SEad9x1FXfVxmD8q5xAmm1SSpDw9kynNlMZ4OA/exec';
+  // a device may override with its own saved url
+  const savedUrl=await localGet(BACKEND_KEY); if(typeof savedUrl==='string' && savedUrl.trim()) BACKEND_URL=savedUrl;
+
+  if(backendActive()){
+    // load shared data from Google Sheet
+    try{
+      const d=await backendLoad();
+      if(d){
+        if(d.config && Object.keys(d.config).length) CONFIG=d.config;
+        RESPONSES = d.responses || {};
+        SUBMITTED = d.submitted || {};
+        // cache locally as backup
+        await localSet(CFG_KEY, CONFIG); await localSet(RESP_KEY, RESPONSES); await localSet(SUB_KEY, SUBMITTED);
+      }
+    }catch(e){
+      // backend unreachable: fall back to last local cache so screen isn't empty
+      const c=await localGet(CFG_KEY); if(c) CONFIG=c;
+      const r=await localGet(RESP_KEY); if(r) RESPONSES=r;
+      const s=await localGet(SUB_KEY); if(s) SUBMITTED=s;
+    }
+  } else {
+    // fallback: local device storage
+    const c=await localGet(CFG_KEY); if(c) CONFIG=c;
+    const r=await localGet(RESP_KEY); if(r) RESPONSES=r;
+    const s=await localGet(SUB_KEY); if(s) SUBMITTED=s;
+  }
+  applyDefaults();
+}
+function applyDefaults(){
+  if(!CONFIG.teams) CONFIG.teams=[];
+  if(!CONFIG.questions) CONFIG.questions=[];
+  // clean any invalid keys that may have crept in (e.g. "null")
+  let _cleaned=false;
+  if(SUBMITTED && SUBMITTED['null']!==undefined){ delete SUBMITTED['null']; _cleaned=true; }
+  if(RESPONSES && RESPONSES['null']!==undefined){ delete RESPONSES['null']; _cleaned=true; }
+  if(_cleaned && backendActive()){ backendSave('submitted', SUBMITTED); backendSave('responses', RESPONSES); }
+  if(CONFIG.adminPw===undefined || CONFIG.adminPw==='' || CONFIG.adminPw==='admin1234') CONFIG.adminPw='1234';
+  if(CONFIG.notice===undefined) CONFIG.notice='';
+  if(CONFIG.projectName===undefined || CONFIG.projectName==='') CONFIG.projectName='조직문제 해결 프로젝트 1기';
+  CONFIG.logoUrl='https://image.ninehire.com/brand/0e03c040-3445-11f0-ad11-afe3978f4a49/d63f57d0-47ba-11f0-9b68-d1d4acce15c8.png';
+  if(CONFIG.footerText===undefined || CONFIG.footerText==='') CONFIG.footerText='ⓒ Round Table';
+}
+async function saveConfig(){
+  if(backendActive()){ await backendSave('config', CONFIG); await localSet(CFG_KEY, CONFIG); }
+  else await localSet(CFG_KEY, CONFIG);
+}
+async function saveResponses(){
+  if(backendActive()){ await backendSave('responses', RESPONSES); await localSet(RESP_KEY, RESPONSES); }
+  else await localSet(RESP_KEY, RESPONSES);
+}
+async function saveSubmitted(){
+  if(backendActive()){ await backendSave('submitted', SUBMITTED); await localSet(SUB_KEY, SUBMITTED); }
+  else await localSet(SUB_KEY, SUBMITTED);
+}
+/* for deletions: overwrite the whole blob (not merge) */
+async function replaceResponses(){
+  if(backendActive()){ await backendSave('responses', RESPONSES, 'replace'); await localSet(RESP_KEY, RESPONSES); }
+  else await localSet(RESP_KEY, RESPONSES);
+}
+async function replaceSubmitted(){
+  if(backendActive()){ await backendSave('submitted', SUBMITTED, 'replace'); await localSet(SUB_KEY, SUBMITTED); }
+  else await localSet(SUB_KEY, SUBMITTED);
+}
+/* pull latest shared data from sheet (for refresh) */
+async function backendRefresh(){
+  if(!backendActive()) return false;
+  try{
+    const d=await backendLoad();
+    if(d){
+      if(d.config && Object.keys(d.config).length) CONFIG=d.config;
+      RESPONSES = d.responses || {};
+      SUBMITTED = d.submitted || {};
+      if(!CONFIG.teams) CONFIG.teams=[];
+      if(!CONFIG.questions) CONFIG.questions=[];
+    }
+    return true;
+  }catch(e){ return false; }
+}
+
+/* ---------------- helpers ---------------- */
+const $ = s => document.querySelector(s);
+const uid = () => Math.random().toString(36).slice(2,9);
+const esc = s => (s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function toast(msg){ const t=$('#toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),1900); }
+function showBusy(msg){ const b=$('#busy'); if(msg) $('#busyMsg').textContent=msg; b.classList.add('show'); }
+function hideBusy(){ $('#busy').classList.remove('show'); }
+
+/* custom modal — replaces native confirm()/prompt() which are blocked in sandbox */
+function modalConfirm(msg, okText, cancelText){
+  return new Promise(resolve=>{
+    const ov=$('#modal'), inp=$('#modalInput');
+    $('#modalMsg').textContent=msg;
+    inp.style.display='none';
+    const ok=$('#modalOk'), cancel=$('#modalCancel');
+    ok.textContent=okText||'확인';
+    cancel.textContent=cancelText||'취소';
+    ov.classList.add('show');
+    function done(val){
+      ov.classList.remove('show'); ok.onclick=null; cancel.onclick=null;
+      ok.textContent='확인'; cancel.textContent='취소'; // restore defaults
+      resolve(val);
+    }
+    ok.onclick=()=>done(true);
+    cancel.onclick=()=>done(false);
+  });
+}
+function modalPrompt(msg, def){
+  return new Promise(resolve=>{
+    const ov=$('#modal'), inp=$('#modalInput');
+    $('#modalMsg').textContent=msg;
+    inp.style.display='block'; inp.value=def||'';
+    ov.classList.add('show'); setTimeout(()=>inp.focus(),50);
+    const ok=$('#modalOk'), cancel=$('#modalCancel');
+    function done(val){ ov.classList.remove('show'); ok.onclick=null; cancel.onclick=null; inp.onkeydown=null; resolve(val); }
+    ok.onclick=()=>done(inp.value);
+    cancel.onclick=()=>done(null);
+    inp.onkeydown=e=>{ if(e.key==='Enter') done(inp.value); if(e.key==='Escape') done(null); };
+  });
+}
+function findMember(id){ for(const t of CONFIG.teams){ const m=t.members.find(x=>x.id===id); if(m) return {member:m,team:t}; } return null; }
+
+let currentView='eval';
+async function switchView(v){
+  // capture any open text answers before leaving the eval tab (don't lose them)
+  if(currentView==='eval'){ try{ captureOpenTextareas(); }catch(e){} }
+  currentView=v;
+  // SECURITY: every tab switch re-locks the protected tabs.
+  // The user must re-enter the password each time they enter 결과/관리자.
+  adminUnlocked=false;
+  ['eval','result','admin'].forEach(x=>{
+    $('#view-'+x).classList.toggle('active', x===v);
+    $('#tab-'+x).classList.toggle('active', x===v);
+  });
+  // 1) render immediately with whatever we already have (feels instant)
+  if(v==='eval') renderEval();
+  if(v==='result') renderResult();
+  if(v==='admin') renderAdmin();
+  applyBranding();
+
+  // 2) quietly fetch the latest in the background, then re-render only if changed
+  if(backendActive()){
+    const before=JSON.stringify({c:CONFIG,r:RESPONSES,s:SUBMITTED});
+    backendRefresh().then(()=>{
+      const after=JSON.stringify({c:CONFIG,r:RESPONSES,s:SUBMITTED});
+      if(after!==before && currentView===v){
+        if(v==='eval') renderEval();
+        if(v==='result') renderResult();
+        if(v==='admin') renderAdmin();
+        applyBranding();
+      }
+    });
+  } else {
+    const r=await localGet(RESP_KEY); if(r) RESPONSES=r;
+    const c=await localGet(CFG_KEY); if(c) CONFIG=c;
+    const s=await localGet(SUB_KEY); if(s) SUBMITTED=s;
+  }
+}
+
+/* ================= ADMIN ================= */
+let adminUnlocked=false;
+function renderAdmin(){
+  const v=$('#view-admin');
+  // password gate — ALWAYS required (re-locks on every tab switch)
+  if(!adminUnlocked){
+    v.innerHTML=`<h2 class="section">🔒 관리자 잠금</h2>
+      <p class="hint">관리자 비밀번호를 입력해야 들어갈 수 있습니다.</p>
+      <div class="card" style="max-width:340px">
+        <label class="fld">비밀번호</label>
+        <input type="password" id="admPw" class="pin-input" style="max-width:none;margin-bottom:10px"
+          onkeydown="if(event.key==='Enter')tryUnlock()" autofocus>
+        <button class="btn" onclick="tryUnlock()">잠금 해제</button>
+      </div>`;
+    return;
+  }
+  let h = ``;
+  h+=`<h2 class="section">프로젝트 설정</h2>
+  <div class="card">
+    <label class="fld">프로젝트 이름 (상단 제목으로 표시)</label>
+    <input type="text" id="setProject" placeholder="예: 조직문제 해결 프로젝트 1기" value="${esc(CONFIG.projectName||'')}" style="margin-bottom:12px">
+    <label class="fld">하단 문구 (선택)</label>
+    <input type="text" id="setFooter" placeholder="예: ⓒ Round Table" value="${esc(CONFIG.footerText||'')}" style="margin-bottom:12px">
+    <button class="btn" onclick="setBranding()">프로젝트 설정 저장</button>
+  </div>
+
+  <h2 class="section">팀 · 인원 관리</h2>
+  <p class="hint">팀을 만들고, 각 팀에 인원을 추가하세요. <b>이름 · 핸드폰 번호 · 생년월일</b>을 등록하면 평가자가 이 세 가지로 본인 인증 후 평가합니다. 엑셀에서 복사해 <b>한 번에 붙여넣기</b>도 가능합니다.</p>
+  <div class="card" style="background:var(--accent-soft);border-color:var(--accent)">
+    <p class="hint" style="margin-bottom:10px;color:var(--ink)"><b>📋 구글 시트 명단으로 한 번에 등록</b><br>
+    연동된 구글 시트에 <b>"명단"</b> 이라는 탭을 만들고, 아래 순서대로 입력한 뒤 버튼을 누르면 팀·인원이 자동 등록됩니다. (현재 명단은 교체됩니다)</p>
+    <div style="overflow-x:auto"><table class="roster" style="min-width:380px;margin-bottom:10px">
+      <thead><tr><th>A열: 팀</th><th>B열: 이름</th><th>C열: 핸드폰</th><th>D열: 생년월일</th></tr></thead>
+      <tbody>
+        <tr><td>1팀</td><td>홍길동</td><td>01012345678</td><td>20000101</td></tr>
+        <tr><td>1팀</td><td>김철수</td><td>01087654321</td><td>19990202</td></tr>
+        <tr><td>2팀</td><td>이영희</td><td>01055551234</td><td>20010303</td></tr>
+      </tbody>
+    </table></div>
+    <button class="btn" onclick="importRoster()">📥 명단 시트에서 불러오기</button>
+  </div>
+  <div class="card">
+    <div class="row">
+      <input type="text" id="newTeam" class="grow" placeholder="새 팀 이름 (예: 1팀, 마케팅팀)">
+      <button class="btn" onclick="addTeam()">팀 추가</button>
+    </div>
+  </div>`;
+
+  if(CONFIG.teams.length===0){
+    h+=`<div class="empty"><span class="big">👥</span>아직 팀이 없어요. 위에서 팀을 추가해 보세요.</div>`;
+  }
+  CONFIG.teams.forEach(t=>{
+    h+=`<div class="card team-block">
+      <div class="team-name">🏷️ ${esc(t.name)} <span class="hint" style="margin:0 0 0 4px;font-family:'IBM Plex Sans KR'">(${t.members.length}명)</span>
+        <button class="btn ghost sm" style="margin-left:auto" onclick="renameTeam('${t.id}')">이름변경</button>
+        <button class="btn danger sm" onclick="delTeam('${t.id}')">팀 삭제</button>
+      </div>`;
+    if(t.members.length){
+      h+=`<div style="overflow-x:auto"><table class="roster"><thead><tr><th>이름</th><th>핸드폰 번호</th><th>생년월일</th><th></th></tr></thead><tbody>`;
+      t.members.forEach(m=>{
+        h+=`<tr>
+          <td><input type="text" value="${esc(m.name||'')}" onchange="updateField('${t.id}','${m.id}','name',this.value)"></td>
+          <td><input type="tel" value="${esc(m.phone||'')}" placeholder="010-0000-0000" onchange="updateField('${t.id}','${m.id}','phone',this.value)"></td>
+          <td><input type="text" value="${esc(m.birth||'')}" placeholder="예: 901225 또는 1990-12-25" onchange="updateField('${t.id}','${m.id}','birth',this.value)"></td>
+          <td><button class="btn danger sm" onclick="delMember('${t.id}','${m.id}')">삭제</button></td>
+        </tr>`;
+      });
+      h+=`</tbody></table></div>`;
+    } else {
+      h+=`<p class="hint">등록된 인원이 없습니다.</p>`;
+    }
+    // single add row
+    h+=`<div class="row addrow" style="margin-top:10px">
+        <input type="text" id="nm_${t.id}" placeholder="이름" style="max-width:110px" onkeydown="if(event.key==='Enter')addMember('${t.id}')">
+        <input type="tel" id="np_${t.id}" placeholder="핸드폰 번호" style="max-width:150px" onkeydown="if(event.key==='Enter')addMember('${t.id}')">
+        <input type="text" id="nb_${t.id}" placeholder="생년월일" style="max-width:130px" onkeydown="if(event.key==='Enter')addMember('${t.id}')">
+        <button class="btn ghost" onclick="addMember('${t.id}')">＋ 추가</button>
+      </div>`;
+    // bulk import
+    h+=`<details class="adv" style="margin-top:10px">
+        <summary>📋 엑셀에서 한 번에 붙여넣기</summary>
+        <p class="hint" style="margin:8px 0">엑셀에서 <b>이름 · 핸드폰 · 생년월일</b> 3개 열을 복사해 아래에 붙여넣고 '일괄 추가'를 누르세요. (쉼표 또는 탭으로 구분, 한 줄에 한 명)</p>
+        <textarea id="bulk_${t.id}" placeholder="홍길동	010-1234-5678	901225
+김철수	010-8765-4321	1988-03-04" style="min-height:90px;font-family:monospace;font-size:13px"></textarea>
+        <button class="btn sm" style="margin-top:8px" onclick="bulkImport('${t.id}')">일괄 추가</button>
+      </details>`;
+    h+=`</div>`;
+  });
+
+  /* questions */
+  const editing = editingQId ? CONFIG.questions.find(q=>q.id===editingQId) : null;
+  h+=`<h2 class="section">평가 문항</h2>
+  <p class="hint">문항 유형: <b>점수형</b>(척도 직접 설정) · <b>척도형</b>(매우 그렇다~전혀 아니다 테이블) · <b>주관식</b>(서술) · <b>객관식</b>(선택지, 이미지 첨부 가능)</p>
+  <div class="card" ${editing?'style="border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)"':''}>
+    ${editing?`<p class="hint" style="color:var(--accent);font-weight:600;margin-bottom:10px">✏️ "${esc(editing.title)}" 문항을 수정 중입니다.</p>`:''}
+    <label class="fld">문항 유형</label>
+    <div class="row" style="margin-bottom:12px">
+      <select id="qType" onchange="renderQBuilder()" style="max-width:200px">
+        <option value="score">점수형</option>
+        <option value="likert">척도형 (테이블)</option>
+        <option value="text">주관식</option>
+        <option value="choice">객관식</option>
+      </select>
+    </div>
+    <label class="fld">질문 내용</label>
+    <input type="text" id="qTitle" placeholder="예: 이 팀원은 협업에 적극적인가요?" style="margin-bottom:12px">
+    <div id="qBuilder"></div>
+    <label style="display:flex;align-items:center;gap:8px;margin-top:14px;font-size:14px;font-weight:600;cursor:pointer">
+      <input type="checkbox" id="qOptional" style="width:18px;height:18px;cursor:pointer">
+      선택 응답 문항으로 설정 (체크 시 응답하지 않아도 제출 가능)
+    </label>
+    <label style="display:flex;align-items:center;gap:8px;margin-top:8px;font-size:14px;font-weight:600;cursor:pointer">
+      <input type="checkbox" id="qFollow" style="width:18px;height:18px;cursor:pointer">
+      ↳ 바로 앞 문항에 이어지는 꼬리질문으로 표시
+    </label>
+    <label style="display:flex;align-items:center;gap:8px;margin-top:8px;font-size:14px;font-weight:600;cursor:pointer;color:var(--accent)">
+      <input type="checkbox" id="qSelf" style="width:18px;height:18px;cursor:pointer">
+      👤 평가자 본인에 대한 질문 (피평가자별 반복 없이, 맨 앞에서 1회 응답)
+    </label>
+    <div class="row" style="margin-top:12px">
+      <button class="btn" onclick="addQuestion()">${editing?'✓ 수정 완료':'＋ 문항 추가'}</button>
+      ${editing?`<button class="btn ghost" onclick="cancelEditQuestion()">취소</button>`:''}
+    </div>
+  </div>`;
+
+  if(CONFIG.questions.length===0){
+    h+=`<div class="empty"><span class="big">📝</span>문항이 없습니다. 위에서 문항을 추가하세요.</div>`;
+  } else {
+    h+=`<div class="row" style="margin:4px 0 14px"><button class="btn ghost" onclick="openPreview()">👁 문항 미리보기 (평가자 화면 확인)</button></div>`;
+  }
+  CONFIG.questions.forEach((q,i)=>{
+    const badge = q.type==='score'?'<span class="q-type-badge t-score">점수형</span>'
+      : q.type==='likert'?'<span class="q-type-badge t-likert">척도형</span>'
+      : q.type==='text'?'<span class="q-type-badge t-text">주관식</span>'
+      : '<span class="q-type-badge t-choice">객관식</span>';
+    let meta='';
+    if(q.type==='score') meta=`척도 ${q.min} ~ ${q.max}점`;
+    if(q.type==='likert') meta=`척도 ${q.scale.length}단계 · 항목 ${q.items.length}개`;
+    if(q.type==='choice'){
+      meta=`선택지 ${q.options.length}개`;
+      const rt=choiceRuleText(q);
+      if(rt) meta+=` · ${rt}`;
+    }
+    const reqBadge = q.optional?'<span class="q-type-badge t-opt">선택</span>':'<span class="q-type-badge t-req">필수</span>';
+    h+=`<div class="q-item">
+      <div class="q-head">
+        <div>
+          <div class="q-title">${q.selfQ?'<span style="color:#0ea5a4">👤 </span>':''}${q.followUp?'<span style="color:var(--accent)">↳ </span>':''}${i+1}. ${esc(q.title)}${q.selfQ?' <span style="font-size:11px;color:#0ea5a4;font-weight:700">(본인질문)</span>':''}${q.followUp?' <span style="font-size:11px;color:var(--accent);font-weight:700">(꼬리질문)</span>':''}</div>
+          <div class="q-meta">${meta}</div>
+        </div>
+        <div class="row">${reqBadge}${badge}
+          <button class="btn ghost sm" onclick="editQuestion('${q.id}')">수정</button>
+          <button class="btn ghost sm" onclick="moveQ(${i},-1)">↑</button>
+          <button class="btn ghost sm" onclick="moveQ(${i},1)">↓</button>
+          <button class="btn danger sm" onclick="delQuestion('${q.id}')">삭제</button>
+        </div>
+      </div>
+      <label style="display:flex;align-items:center;gap:7px;margin-top:8px;font-size:13px;cursor:pointer;color:var(--muted)">
+        <input type="checkbox" ${q.optional?'checked':''} style="width:16px;height:16px;cursor:pointer" onchange="toggleOptional('${q.id}')">
+        선택 응답 (체크 해제 시 필수)
+      </label>`;
+    if(q.type==='choice'){
+      h+=`<div style="margin-top:8px">`;
+      q.options.forEach(o=>{
+        h+=`<div class="opt-line">${o.img?`<img src="${esc(o.img)}" onerror="this.style.display='none'">`:''}<span>• ${esc(o.label)}</span></div>`;
+      });
+      h+=`</div>`;
+    }
+    if(q.type==='likert'){
+      h+=`<div style="margin-top:8px;font-size:12px;color:var(--muted)">
+        척도: ${q.scale.map(s=>esc(s)).join(' · ')}<br>
+        항목: ${q.items.map(it=>esc(it)).join(' / ')}</div>`;
+    }
+    h+=`</div>`;
+  });
+
+  h+=`<div class="divider"></div>
+  <h2 class="section">평가 전 주의사항</h2>
+  <div class="card">
+    <p class="hint" style="margin-bottom:10px">여기에 내용을 입력하면, 평가자가 본인 인증을 하기 전에 이 주의사항을 읽고 <b>"동의합니다"</b>에 체크해야 진행할 수 있습니다. 비워두면 이 단계는 생략됩니다.</p>
+    <label class="fld">주의사항 내용</label>
+    <textarea id="setNotice" placeholder="예: 본 평가는 익명으로 진행되며, 제출 후에는 수정할 수 없습니다. 솔직하고 신중하게 평가해 주세요." style="min-height:110px;margin-bottom:10px">${esc(CONFIG.notice||'')}</textarea>
+    <div class="row">
+      <button class="btn" onclick="setNotice()">주의사항 저장</button>
+      ${CONFIG.notice?'<button class="btn danger ghost" onclick="clearNotice()">주의사항 제거</button>':''}
+    </div>
+  </div>
+
+  <div class="divider"></div>
+  <h2 class="section">제출 현황 (1인 1회)</h2>
+  <div class="card">
+    <p class="hint" style="margin-bottom:10px">제출을 완료한 사람은 다시 평가할 수 없습니다. 실수로 제출한 경우, 아래에서 해당 인원의 제출 잠금을 풀어 재평가를 허용할 수 있습니다.</p>`;
+  const submittedList=[];
+  CONFIG.teams.forEach(t=>t.members.forEach(m=>{ if(SUBMITTED[m.id]) submittedList.push({m,t}); }));
+  if(submittedList.length===0){
+    h+=`<p class="hint" style="margin:0">아직 제출한 인원이 없습니다.</p>`;
+  } else {
+    h+=`<p class="hint" style="margin-bottom:8px">제출 완료: <b>${submittedList.length}명</b></p>`;
+    submittedList.forEach(({m,t})=>{
+      h+=`<div class="row" style="margin:4px 0;align-items:center">
+        <span style="flex:1;font-size:13px">✅ ${esc(m.name)} <span class="hint" style="margin:0">(${esc(t.name)})</span></span>
+        <button class="btn danger sm" onclick="unlockSubmission('${m.id}','${esc(m.name).replace(/'/g,"\\'")}')">제출 잠금 해제</button>
+      </div>`;
+    });
+  }
+  h+=`</div>
+
+  <div class="divider"></div>
+  <h2 class="section">관리자 비밀번호</h2>
+  <div class="card">
+    <p class="hint" style="margin-bottom:10px">결과·관리자 탭은 <b>항상 이 비밀번호로 잠겨</b> 있어, 평가자는 들어올 수 없습니다. 보안을 위해 기본 비밀번호를 <b>본인만 아는 값으로 꼭 변경</b>하세요.</p>
+    <label class="fld">새 비밀번호로 변경</label>
+    <input type="password" id="setPw" class="pin-input" placeholder="새 비밀번호 입력" style="max-width:240px;margin-bottom:10px">
+    <div class="row">
+      <button class="btn" onclick="setAdminPw()">비밀번호 변경</button>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+  <h2 class="section">공용 저장소 (참여자 공유) ${backendActive()?'<span class="q-type-badge t-score" style="margin-left:6px">연결됨</span>':'<span class="q-type-badge t-opt" style="margin-left:6px">미연결</span>'}</h2>
+  <div class="card">
+    <p class="hint" style="margin-bottom:10px"><b>여러 사람이 같은 링크로 평가하려면 이 설정이 꼭 필요합니다.</b> 구글 시트를 공용 저장소로 연결하면, 운영자가 등록한 팀·문항을 참여자들이 동일하게 보고, 응답·제출현황이 모두 한곳(구글 시트)에 모입니다.</p>
+    <label class="fld">공용 저장소(Apps Script 웹앱) URL</label>
+    <input type="text" id="backendUrl" placeholder="https://script.google.com/macros/s/.../exec" value="${esc(BACKEND_URL||'')}" style="margin-bottom:10px">
+    <div class="row">
+      <button class="btn" onclick="saveBackendUrl()">URL 저장 후 연결</button>
+      <button class="btn ghost" onclick="reloadFromBackend()">🔄 지금 불러오기</button>
+    </div>
+    <details class="adv" style="margin-top:14px">
+      <summary>📋 공용 저장소 설정 방법 (한 번만)</summary>
+      <ol style="font-size:13px;color:#444;line-height:1.9;margin:10px 0 0 18px">
+        <li>구글 드라이브에서 새 <b>스프레드시트</b>를 만듭니다.</li>
+        <li>상단 메뉴 <b>확장 프로그램 → Apps Script</b>를 엽니다.</li>
+        <li>기존 코드를 모두 지우고, 아래 '코드 복사' 버튼의 내용을 붙여넣고 저장합니다.</li>
+        <li><b>배포 → 새 배포 → 유형: 웹 앱</b>, 액세스 권한 <b>'모든 사용자'</b>로 배포합니다.</li>
+        <li>생성된 <b>웹 앱 URL</b>(.../exec)을 위 칸에 붙여넣고 'URL 저장 후 연결'.</li>
+        <li>그다음 위에서 팀·문항·설정을 등록하면 구글 시트에 저장되고, 참여자들이 같은 링크로 보게 됩니다.</li>
+      </ol>
+      <button class="btn ghost sm" style="margin-top:10px" onclick="copyScript()">📑 Apps Script 코드 복사</button>
+    </details>
+  </div>
+
+  <h2 class="section">데이터 내보내기 / 초기화</h2>
+  <div class="card tight">
+    <p class="hint" style="margin-bottom:10px">결과를 엑셀/구글시트로 따로 받고 싶을 때 사용하세요.</p>
+    <div class="row">
+      <button class="btn ghost sm" onclick="exportCSV()">📊 결과 CSV 내보내기</button>
+      <button class="btn ghost sm" onclick="exportData()">전체 백업(JSON)</button>
+      <button class="btn danger sm" onclick="resetResponses()">응답 초기화</button>
+      <button class="btn danger sm" onclick="resetAll()">전체 초기화</button>
+    </div>
+  </div>
+
+  <div class="card" style="text-align:center;background:var(--accent-soft);border-color:var(--accent)">
+    <p class="hint" style="margin-bottom:12px;color:var(--ink)">아래 버튼을 누르면 위에서 입력한 <b>모든 설정</b>(프로젝트·로고·주의사항·비밀번호)이 한 번에 저장됩니다. <br>팀·인원·문항은 추가/수정할 때 이미 자동 저장되어 있어요.</p>
+    <button class="btn" style="font-size:15px;padding:12px 28px" onclick="saveAllSettings()">💾 모든 설정 저장하기</button>
+  </div>`;
+
+  v.innerHTML=h;
+  if(editingQId){
+    const q=CONFIG.questions.find(x=>x.id===editingQId);
+    if(q) populateBuilder(q); else renderQBuilder();
+  } else {
+    renderQBuilder();
+  }
+}
+function populateBuilder(q){
+  // set type, then build, then fill values
+  const typeSel=$('#qType'); if(typeSel) typeSel.value=q.type;
+  renderQBuilder();
+  $('#qTitle').value=q.title||'';
+  $('#qOptional').checked=!!q.optional;
+  if($('#qFollow')) $('#qFollow').checked=!!q.followUp;
+  if($('#qSelf')) $('#qSelf').checked=!!q.selfQ;
+  if(q.type==='score'){
+    if($('#qMin')) $('#qMin').value=q.min;
+    if($('#qMax')) $('#qMax').value=q.max;
+  } else if(q.type==='likert'){
+    scaleRows=(q.scale||[]).map(s=>({id:uid(),label:s}));
+    likertItems=(q.items||[]).map(t=>({id:uid(),text:t}));
+    if(scaleRows.length<2) scaleRows=[{id:uid(),label:'매우 그렇다'},{id:uid(),label:'전혀 아니다'}];
+    if(likertItems.length<1) likertItems=[{id:uid(),text:''}];
+    drawScales(); drawLikertItems();
+  } else if(q.type==='choice'){
+    optRows=(q.options||[]).map(o=>({id:uid(),label:o.label,img:o.img||''}));
+    if(optRows.length<2){ while(optRows.length<2) optRows.push({id:uid(),label:'',img:''}); }
+    drawOpts();
+    const mx=q.maxSelect||1;
+    const mn=(q.minSelect===undefined)?(mx>1?0:1):q.minSelect;
+    if($('#qMaxSel')) $('#qMaxSel').value=mx;
+    if($('#qMinSel')) $('#qMinSel').value=mn;
+  }
+}
+function editQuestion(id){
+  editingQId=id;
+  renderAdmin();
+  // scroll the builder into view
+  setTimeout(()=>{ const c=document.querySelector('#view-admin .card'); if(c) document.querySelector('h2.section')?.scrollIntoView({behavior:'smooth'}); $('#qTitle')?.scrollIntoView({behavior:'smooth',block:'center'}); },50);
+}
+function cancelEditQuestion(){
+  editingQId=null;
+  renderAdmin();
+}
+
+async function saveAllSettings(){
+  // gather every settings field currently on screen (only if present)
+  const g=id=>{ const el=$('#'+id); return el?el.value:undefined; };
+  const proj=g('setProject'); if(proj!==undefined) CONFIG.projectName=proj.trim();
+  const foot=g('setFooter');  if(foot!==undefined) CONFIG.footerText=foot.trim();
+  const notice=g('setNotice'); if(notice!==undefined) CONFIG.notice=notice.trim();
+  const pw=g('setPw');        if(pw!==undefined && pw.trim()!=='') { CONFIG.adminPw=pw.trim(); adminUnlocked=true; }
+  // backend URL is stored separately (per device)
+  const back=g('backendUrl');
+  if(back!==undefined){
+    const u=back.trim();
+    if(u==='' || /^https:\/\/script\.google\.com\/macros\/s\/.+\/exec$/.test(u)){
+      BACKEND_URL=u; await localSet(BACKEND_KEY, BACKEND_URL);
+    }
+  }
+  await saveConfig();
+  applyBranding();
+  toast('모든 설정을 저장했습니다 ✓');
+  renderAdmin();
+}
+
+function renderQBuilder(){
+  const t=$('#qType').value, b=$('#qBuilder');
+  if(!b) return;
+  if(t==='score'){
+    b.innerHTML=`<div class="row">
+      <div><label class="fld">최저 점수</label><input type="number" id="qMin" value="1" style="width:90px"></div>
+      <div><label class="fld">최고 점수</label><input type="number" id="qMax" value="5" style="width:90px"></div>
+    </div>`;
+  } else if(t==='likert'){
+    b.innerHTML=`
+      <label class="fld">척도 (위 = 높은 점수 / 아래 = 낮은 점수)</label>
+      <p class="hint" style="margin:2px 0 8px">라벨은 비워둬도 됩니다. 양 끝만 적으면 가운데는 숫자만 표시돼요. (예: 7점 "매우 만족", 1점 "매우 불만족")</p>
+      <div id="scaleList"></div>
+      <button class="btn ghost sm" onclick="addScaleRow()" style="margin-top:6px">＋ 척도 추가</button>
+      <label class="fld" style="margin-top:14px">평가 항목 (한 문항 안에서 항목별로 척도를 선택)</label>
+      <div id="likertItems"></div>
+      <button class="btn ghost sm" onclick="addLikertItem()" style="margin-top:6px">＋ 항목 추가</button>`;
+    scaleRows=[
+      {id:uid(),label:'매우 그렇다'},
+      {id:uid(),label:'대체로 그렇다'},
+      {id:uid(),label:'대체로 그렇지 않다'},
+      {id:uid(),label:'전혀 아니다'}
+    ];
+    likertItems=[]; drawScales(); addLikertItem();
+  } else if(t==='text'){
+    b.innerHTML=`<p class="hint">평가자가 자유롭게 서술하는 주관식 문항입니다.</p>`;
+  } else {
+    b.innerHTML=`<label class="fld">선택지 (이미지 URL은 선택 사항)</label>
+      <div id="optList"></div>
+      <button class="btn ghost sm" onclick="addOptRow()" style="margin-top:6px">＋ 선택지 추가</button>
+      <div class="row" style="margin-top:14px">
+        <div><label class="fld">최소 선택 개수</label><input type="number" id="qMinSel" value="1" min="0" style="width:110px"></div>
+        <div><label class="fld">최대 선택 개수</label><input type="number" id="qMaxSel" value="1" min="1" style="width:110px"></div>
+      </div>
+      <p class="hint" style="margin-top:8px">예) 정확히 2개 → 최소 2 / 최대 2 · 최대 3개까지 → 최소 0 / 최대 3 · 2개 이상 → 최소 2 / 최대(선택지 수)</p>`;
+    optRows=[]; addOptRow(); addOptRow();
+  }
+}
+
+/* ---- Likert builder state ---- */
+let scaleRows=[], likertItems=[];
+let editingQId=null; // when set, addQuestion updates this question instead of adding
+function addScaleRow(){ syncScaleInputs(); scaleRows.push({id:uid(),label:''}); drawScales(); }
+function drawScales(){
+  const el=$('#scaleList'); if(!el) return;
+  el.innerHTML=scaleRows.map((s,i)=>`<div class="row" style="margin-bottom:6px">
+    <span class="lk-score" style="background:var(--accent);width:26px;height:26px;font-size:12px">${scaleRows.length-i}</span>
+    <input type="text" class="grow" id="sc_${s.id}" placeholder="라벨 (선택 — 비워도 됨)" value="${esc(s.label)}">
+    <button class="btn danger sm" onclick="rmScale('${s.id}')">×</button>
+  </div>`).join('');
+}
+function rmScale(id){ if(scaleRows.length<=2) return toast('척도는 2개 이상 필요합니다'); syncScaleInputs(); scaleRows=scaleRows.filter(s=>s.id!==id); drawScales(); }
+function syncScaleInputs(){ scaleRows.forEach(s=>{ const el=$('#sc_'+s.id); if(el) s.label=el.value; }); }
+function addLikertItem(){ syncLikertInputs(); likertItems.push({id:uid(),text:''}); drawLikertItems(); }
+function drawLikertItems(){
+  const el=$('#likertItems'); if(!el) return;
+  el.innerHTML=likertItems.map(it=>`<div class="row" style="margin-bottom:6px">
+    <input type="text" class="grow" id="li_${it.id}" placeholder="평가 항목 (예: 책임감을 갖고 업무를 수행한다)" value="${esc(it.text)}">
+    <button class="btn danger sm" onclick="rmLikertItem('${it.id}')">×</button>
+  </div>`).join('');
+}
+function rmLikertItem(id){ syncLikertInputs(); likertItems=likertItems.filter(i=>i.id!==id); drawLikertItems(); }
+function syncLikertInputs(){ likertItems.forEach(it=>{ const el=$('#li_'+it.id); if(el) it.text=el.value; }); }
+
+let optRows=[];
+function syncOptInputs(){
+  optRows.forEach(o=>{
+    const l=$('#optL_'+o.id); if(l) o.label=l.value;
+    const im=$('#optI_'+o.id); if(im) o.img=im.value;
+  });
+}
+function addOptRow(){
+  syncOptInputs();              // keep what's already typed
+  optRows.push({id:uid(),label:'',img:''});
+  drawOpts();
+}
+function drawOpts(){
+  const el=$('#optList'); if(!el) return;
+  el.innerHTML=optRows.map(o=>`<div class="row" style="margin-bottom:6px">
+    <input type="text" class="grow" id="optL_${o.id}" placeholder="선택지 내용" value="${esc(o.label||'')}">
+    <input type="text" id="optI_${o.id}" placeholder="이미지 URL(선택)" style="max-width:200px" value="${esc(o.img||'')}">
+    <button class="btn danger sm" onclick="rmOpt('${o.id}')">×</button>
+  </div>`).join('');
+}
+function rmOpt(id){ syncOptInputs(); optRows=optRows.filter(o=>o.id!==id); drawOpts(); }
+
+async function addTeam(){
+  const n=$('#newTeam').value.trim(); if(!n) return toast('팀 이름을 입력하세요');
+  CONFIG.teams.push({id:uid(),name:n,members:[]});
+  await saveConfig(); renderAdmin();
+}
+async function renameTeam(id){
+  const t=CONFIG.teams.find(x=>x.id===id);
+  const n=await modalPrompt('팀 이름 변경',t.name); if(n===null) return;
+  t.name=n.trim()||t.name; await saveConfig(); renderAdmin();
+}
+async function delTeam(id){
+  if(!await modalConfirm('이 팀을 삭제할까요? 관련 평가 응답도 의미를 잃을 수 있습니다.')) return;
+  CONFIG.teams=CONFIG.teams.filter(x=>x.id!==id);
+  await saveConfig(); renderAdmin();
+}
+function normPhone(p){ return (p||'').replace(/[^0-9]/g,''); } // digits only for matching
+function normBirth(b){
+  // keep digits only, then take last 6 (YYMMDD) so 1990-12-25 and 901225 both match
+  let d=(b||'').replace(/[^0-9]/g,'');
+  if(d.length>6) d=d.slice(-6);
+  return d;
+}
+function findMemberByInfo(name, phone, birth){
+  const nm=(name||'').trim(), np=normPhone(phone), nb=normBirth(birth);
+  for(const t of CONFIG.teams){
+    const m=t.members.find(x=>
+      (x.name||'').trim()===nm &&
+      normPhone(x.phone)===np &&
+      normBirth(x.birth)===nb
+    );
+    if(m) return {member:m,team:t};
+  }
+  return null;
+}
+function phoneExists(np, exceptId){
+  if(!np) return false;
+  for(const t of CONFIG.teams){
+    if(t.members.some(m=>m.id!==exceptId && normPhone(m.phone)===np)) return true;
+  }
+  return false;
+}
+async function addMember(tid){
+  const n=($('#nm_'+tid).value||'').trim(); if(!n) return toast('이름을 입력하세요');
+  const ph=($('#np_'+tid).value||'').trim();
+  const bi=($('#nb_'+tid).value||'').trim();
+  if(ph && phoneExists(normPhone(ph))) return toast('이미 등록된 핸드폰 번호입니다');
+  const t=CONFIG.teams.find(x=>x.id===tid);
+  t.members.push({id:uid(),name:n,phone:ph,birth:bi});
+  await saveConfig(); renderAdmin();
+}
+async function updateField(tid,mid,field,val){
+  val=(val||'').trim();
+  if(field==='phone' && val && phoneExists(normPhone(val),mid)){
+    toast('이미 등록된 핸드폰 번호입니다'); renderAdmin(); return;
+  }
+  const t=CONFIG.teams.find(x=>x.id===tid);
+  const m=t.members.find(x=>x.id===mid);
+  if(m){ m[field]=val; await saveConfig(); toast('저장되었습니다'); }
+}
+async function bulkImport(tid){
+  const ta=$('#bulk_'+tid); const text=ta.value.trim();
+  if(!text) return toast('붙여넣은 내용이 없습니다');
+  const t=CONFIG.teams.find(x=>x.id===tid);
+  const lines=text.split(/\r?\n/).map(l=>l.trim()).filter(Boolean);
+  let added=0, dup=0, bad=0;
+  for(const line of lines){
+    const parts=line.split(/\t|,/).map(s=>s.trim());
+    const [name,phone,birth]=[parts[0]||'',parts[1]||'',parts[2]||''];
+    if(!name){ bad++; continue; }
+    if(phone && phoneExists(normPhone(phone))){ dup++; continue; }
+    t.members.push({id:uid(),name,phone,birth});
+    added++;
+  }
+  await saveConfig();
+  let msg=`${added}명 추가됨`;
+  if(dup) msg+=` · 중복 ${dup}명 제외`;
+  if(bad) msg+=` · 오류 ${bad}줄`;
+  toast(msg);
+  renderAdmin();
+}
+async function importRoster(){
+  if(!backendActive()){ toast('공용 저장소(구글 시트)가 연결되어 있어야 합니다'); return; }
+  showBusy('명단 불러오는 중…');
+  let roster=[];
+  try{
+    const res=await fetch(BACKEND_URL.trim()+'?t='+Date.now(),{method:'GET'});
+    const data=await res.json();
+    roster=data.roster||[];
+  }catch(e){ hideBusy(); toast('명단을 불러오지 못했습니다. URL을 확인하세요'); return; }
+  hideBusy();
+
+  if(!roster.length){
+    toast('구글 시트에 "명단" 탭이 없거나 비어 있습니다');
+    return;
+  }
+  if(!await modalConfirm(`구글 시트 "명단" 탭에서 ${roster.length}명을 발견했습니다.\n현재 팀·인원을 이 명단으로 교체할까요?`,'불러오기','취소')) return;
+
+  showBusy('명단 적용 중입니다…');
+  // rebuild teams from the roster (team name groups members)
+  const teamMap={}; const order=[];
+  roster.forEach(r=>{
+    const teamName=r.team||'(팀 미지정)';
+    if(!teamMap[teamName]){ teamMap[teamName]={id:uid(),name:teamName,members:[]}; order.push(teamName); }
+    if(r.name){
+      teamMap[teamName].members.push({id:uid(),name:r.name,phone:(r.phone||'').toString(),birth:(r.birth||'').toString()});
+    }
+  });
+  CONFIG.teams=order.map(n=>teamMap[n]);
+  editingQId=null; // reset any editing state so renderAdmin works cleanly
+  await saveConfig();
+  hideBusy();
+  let cnt=0; CONFIG.teams.forEach(t=>cnt+=t.members.length);
+  toast(`명단을 불러왔습니다 ✓ (${CONFIG.teams.length}팀 · ${cnt}명)`);
+  renderAdmin();
+}
+async function delMember(tid,mid){
+  const t=CONFIG.teams.find(x=>x.id===tid);
+  t.members=t.members.filter(m=>m.id!==mid);
+  await saveConfig(); renderAdmin();
+}
+async function addQuestion(){
+  const type=$('#qType').value, title=$('#qTitle').value.trim();
+  if(!title) return toast('질문 내용을 입력하세요');
+  const q={id: editingQId||uid(), type, title, optional:$('#qOptional').checked, followUp:$('#qFollow').checked, selfQ:($('#qSelf')?$('#qSelf').checked:false)};
+  if(type==='score'){
+    q.min=parseInt($('#qMin').value)||1; q.max=parseInt($('#qMax').value)||5;
+    if(q.max<=q.min) return toast('최고 점수가 최저보다 커야 합니다');
+  }
+  if(type==='likert'){
+    syncScaleInputs(); syncLikertInputs();
+    // keep ALL scale points (empty labels allowed — they show as numbers only)
+    q.scale=scaleRows.map(s=>(s.label||'').trim());
+    q.items=likertItems.map(i=>i.text.trim()).filter(Boolean);
+    if(q.scale.length<2) return toast('척도 칸이 2개 이상 필요합니다 (＋척도 추가)');
+    if(q.items.length<1) return toast('평가 항목을 1개 이상 입력하세요');
+  }
+  if(type==='choice'){
+    syncOptInputs();
+    q.options=[];
+    optRows.forEach(o=>{
+      const l=($('#optL_'+o.id)||{}).value!==undefined ? $('#optL_'+o.id).value : o.label;
+      const im=($('#optI_'+o.id)||{}).value!==undefined ? $('#optI_'+o.id).value : (o.img||'');
+      if(l&&l.trim()) q.options.push({label:l.trim(), img:(im||'').trim()});
+    });
+    if(q.options.length<2) return toast('선택지를 2개 이상 입력하세요');
+    let ms=parseInt(($('#qMaxSel')||{}).value); if(isNaN(ms)||ms<1) ms=1;
+    let mn=parseInt(($('#qMinSel')||{}).value); if(isNaN(mn)||mn<0) mn=0;
+    if(ms>q.options.length) ms=q.options.length;
+    if(mn>ms) mn=ms;                 // min can't exceed max
+    if(mn>q.options.length) mn=q.options.length;
+    q.maxSelect=ms;
+    q.minSelect=mn;
+  }
+  if(editingQId){
+    const idx=CONFIG.questions.findIndex(x=>x.id===editingQId);
+    if(idx>=0) CONFIG.questions[idx]=q; else CONFIG.questions.push(q);
+    editingQId=null;
+    await saveConfig();
+    renderAdmin();
+    toast('문항이 수정되었습니다 ✓');
+  } else {
+    CONFIG.questions.push(q);
+    await saveConfig();
+    $('#qTitle').value='';
+    renderAdmin();
+    toast('문항이 추가되었습니다');
+  }
+}
+async function delQuestion(id){
+  if(editingQId===id) editingQId=null;
+  CONFIG.questions=CONFIG.questions.filter(q=>q.id!==id);
+  await saveConfig(); renderAdmin();}
+async function toggleOptional(id){
+  const q=CONFIG.questions.find(x=>x.id===id);
+  if(q){ q.optional=!q.optional; await saveConfig(); renderAdmin(); }
+}
+async function moveQ(i,d){
+  const j=i+d; if(j<0||j>=CONFIG.questions.length) return;
+  const a=CONFIG.questions; [a[i],a[j]]=[a[j],a[i]];
+  await saveConfig(); renderAdmin();
+}
+async function resetResponses(){
+  if(!await modalConfirm('모든 평가 응답을 삭제할까요?')) return;
+  RESPONSES={}; SUBMITTED={}; await replaceResponses(); await replaceSubmitted(); toast('응답을 초기화했습니다'); renderAdmin();
+}
+async function resetAll(){
+  if(!await modalConfirm('팀·문항·응답을 모두 삭제할까요? 되돌릴 수 없습니다.')) return;
+  CONFIG={teams:[],questions:[]}; RESPONSES={}; SUBMITTED={};
+  await saveConfig(); await replaceResponses(); await replaceSubmitted(); renderAdmin();
+}
+function exportData(){
+  const data={config:CONFIG,responses:RESPONSES,exportedAt:new Date().toISOString()};
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob);
+  a.download='평가결과_'+new Date().toISOString().slice(0,10)+'.json'; a.click();
+}
+
+/* ---- build flat rows: one row per (evaluator, evaluatee, question) ---- */
+function buildRows(){
+  const rows=[['팀','평가자','피평가자','문항','유형','응답']];
+  CONFIG.teams.forEach(team=>{
+    team.members.forEach(target=>{
+      for(const evId in RESPONSES){
+        const a=RESPONSES[evId][target.id];
+        if(!a) continue;
+        const ev=findMember(evId);
+        // only count evaluators in the same team as the target
+        if(!ev || ev.team.id!==team.id) continue;
+        CONFIG.questions.forEach(q=>{
+          if(a[q.id]===undefined||a[q.id]==='') return;
+          if(q.type==='likert'){
+            const obj=a[q.id];
+            if(obj&&typeof obj==='object'){
+              q.items.forEach((it,ii)=>{
+                if(obj[ii]!==undefined&&obj[ii]!=='')
+                  rows.push([team.name, ev.member.name, target.name, q.title+' › '+it, q.type, String(obj[ii])]);
+              });
+            }
+          } else {
+            const v=a[q.id];
+            const out=Array.isArray(v)?v.join(', '):String(v);
+            rows.push([team.name, ev.member.name, target.name, q.title, q.type, out]);
+          }
+        });
+      }
+    });
+  });
+  // self-question answers (피평가자 칸에 "(본인)" 표시)
+  const selfQs=CONFIG.questions.filter(q=>q.selfQ);
+  if(selfQs.length){
+    for(const evId in RESPONSES){
+      const a=RESPONSES[evId][SELF_TID];
+      if(!a) continue;
+      const ev=findMember(evId);
+      if(!ev) continue;
+      selfQs.forEach(q=>{
+        if(a[q.id]===undefined||a[q.id]==='') return;
+        if(q.type==='likert'){
+          const obj=a[q.id];
+          if(obj&&typeof obj==='object'){
+            q.items.forEach((it,ii)=>{
+              if(obj[ii]!==undefined&&obj[ii]!=='')
+                rows.push([ev.team.name, ev.member.name, '(본인)', q.title+' › '+it, q.type, String(obj[ii])]);
+            });
+          }
+        } else {
+          const v=a[q.id];
+          const out=Array.isArray(v)?v.join(', '):String(v);
+          rows.push([ev.team.name, ev.member.name, '(본인)', q.title, q.type, out]);
+        }
+      });
+    }
+  }
+  return rows;
+}
+function csvEscape(s){ s=String(s); return /[",\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s; }
+function exportCSV(){
+  const rows=buildRows();
+  if(rows.length<=1) return toast('내보낼 응답이 없습니다');
+  const csv='\uFEFF'+rows.map(r=>r.map(csvEscape).join(',')).join('\n'); // BOM for Excel/한글
+  const blob=new Blob([csv],{type:'text/csv;charset=utf-8'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob);
+  a.download='평가결과_'+new Date().toISOString().slice(0,10)+'.csv'; a.click();
+  toast('CSV를 내려받았어요. 구글 시트 > 가져오기에 올리거나 그대로 붙여넣으세요.');
+}
+
+/* ---- push all current rows to Google Sheet via Apps Script ---- */
+async function saveBackendUrl(){
+  const url=($('#backendUrl').value||'').trim();
+  if(url && !/^https:\/\/script\.google\.com\/macros\/s\/.+\/exec$/.test(url)){
+    if(/\/dev$/.test(url)) return toast('URL이 /dev로 끝나요. 배포 후의 /exec 주소를 넣어주세요');
+    if(!/^https:\/\//.test(url)) return toast('URL이 https:// 로 시작해야 합니다');
+    return toast('URL 형식이 올바르지 않아요. .../exec 로 끝나는 주소가 맞는지 확인하세요');
+  }
+  BACKEND_URL=url;
+  await localSet(BACKEND_KEY, BACKEND_URL); // remember on this device
+  if(!url){ toast('공용 저장소 연결을 해제했습니다'); renderAdmin(); return; }
+  // first connection: push current local config up so the sheet has it, then reload
+  toast('연결 중…');
+  await backendSave('config', CONFIG);
+  await backendSave('responses', RESPONSES);
+  await backendSave('submitted', SUBMITTED);
+  const ok=await backendRefresh();
+  toast(ok?'공용 저장소에 연결되었습니다 ✓':'연결은 저장했으나 불러오기에 실패했어요. URL을 확인하세요');
+  applyBranding();
+  renderAdmin();
+}
+async function reloadFromBackend(){
+  if(!backendActive()) return toast('먼저 공용 저장소 URL을 저장하세요');
+  const ok=await backendRefresh();
+  toast(ok?'공용 저장소에서 불러왔습니다 ✓':'불러오기 실패 — URL을 확인하세요');
+  applyBranding();
+  renderAdmin();
+}
+
+function tryUnlock(){
+  const v=($('#admPw').value||'').trim();
+  if(v===(CONFIG.adminPw||'').trim()){ adminUnlocked=true; toast('잠금을 해제했습니다'); renderAdmin(); }
+  else toast('비밀번호가 올바르지 않습니다');
+}
+function lockAdmin(){
+  adminUnlocked=false;
+  toast('잠갔습니다');
+  // re-render whichever protected view is active
+  if(currentView==='admin') renderAdmin();
+  else if(currentView==='result') renderResult();
+  else renderAdmin();
+}
+function tryUnlockResult(){
+  const v=($('#resPw').value||'').trim();
+  if(v===(CONFIG.adminPw||'').trim()){ adminUnlocked=true; toast('잠금을 해제했습니다'); renderResult(); }
+  else toast('비밀번호가 올바르지 않습니다');
+}
+async function reloadResults(){
+  if(backendActive()) await backendRefresh();
+  else { const r=await localGet(RESP_KEY); if(r) RESPONSES=r; const c=await localGet(CFG_KEY); if(c) CONFIG=c; }
+  toast('최신 데이터를 불러왔습니다');
+  renderResult();
+}
+async function deleteResults(){
+  if(!await verifyAdminPw('평가 결과를 모두 삭제')) return;
+  if(!await modalConfirm('정말로 모든 평가 결과를 삭제하시겠습니까?\n삭제하면 되돌릴 수 없습니다.','삭제','취소')) return;
+  RESPONSES={}; SUBMITTED={};
+  await replaceResponses(); await replaceSubmitted();
+  toast('평가 결과를 삭제했습니다');
+  renderResult();
+}
+async function verifyAdminPw(actionLabel){
+  if(!CONFIG.adminPw) return true; // no password set
+  const entered=await modalPrompt(`${actionLabel}하려면 관리자 비밀번호를 입력하세요.`,'');
+  if(entered===null) return false; // cancelled
+  if((entered||'').trim()!==(CONFIG.adminPw||'').trim()){ toast('비밀번호가 올바르지 않습니다'); return false; }
+  return true;
+}
+async function deleteTargetResults(targetId, targetName){
+  if(!await verifyAdminPw('이 결과를 삭제')) return;
+  if(!await modalConfirm(`"${targetName}" 님에 대한 모든 평가를 삭제할까요?\n되돌릴 수 없습니다.`,'삭제','취소')) return;
+  await backendRefresh(); // work from latest
+  // remove this target from every evaluator's responses
+  for(const evId in RESPONSES){
+    if(RESPONSES[evId] && RESPONSES[evId][targetId]){
+      delete RESPONSES[evId][targetId];
+      if(Object.keys(RESPONSES[evId]).length===0) delete RESPONSES[evId];
+    }
+  }
+  await replaceResponses();
+  toast(`${targetName} 님의 결과를 삭제했습니다`);
+  renderResult();
+}
+async function deleteOneResult(evId, targetId, evName, targetName){
+  if(!await verifyAdminPw('이 평가를 삭제')) return;
+  if(!await modalConfirm(`"${evName}" 님이 "${targetName}" 님에게 한 평가를 삭제할까요?\n(삭제하면 ${evName} 님은 다시 평가할 수 있게 됩니다.)`,'삭제','취소')) return;
+  await backendRefresh(); // work from latest
+  if(RESPONSES[evId] && RESPONSES[evId][targetId]){
+    delete RESPONSES[evId][targetId];
+    if(Object.keys(RESPONSES[evId]).length===0) delete RESPONSES[evId];
+  }
+  if(SUBMITTED[evId]){ delete SUBMITTED[evId]; await replaceSubmitted(); }
+  await replaceResponses();
+  toast('해당 평가를 삭제했습니다');
+  renderResult();
+}
+async function setPwFromResult(){
+  const v=($('#resNewPw').value||'').trim();
+  if(!v) return toast('비밀번호를 입력하세요');
+  CONFIG.adminPw=v; adminUnlocked=true;
+  await saveConfig();
+  toast('비밀번호를 설정했습니다');
+  renderResult();
+}
+async function setAdminPw(){
+  const v=($('#setPw').value||'').trim();
+  if(!v) return toast('새 비밀번호를 입력하세요');
+  if(v.length<4) return toast('비밀번호는 4자 이상으로 설정하세요');
+  CONFIG.adminPw=v;
+  adminUnlocked=true; // setter stays unlocked in this session
+  await saveConfig();
+  $('#setPw').value='';
+  toast('비밀번호를 변경했습니다 ✓');
+  renderAdmin();
+}
+async function setNotice(){
+  CONFIG.notice=($('#setNotice').value||'').trim();
+  await saveConfig();
+  toast(CONFIG.notice?'주의사항을 저장했습니다':'주의사항을 비웠습니다');
+  renderAdmin();
+}
+async function setBranding(){
+  CONFIG.projectName=($('#setProject').value||'').trim();
+  CONFIG.footerText=($('#setFooter').value||'').trim();
+  await saveConfig();
+  applyBranding();
+  toast('프로젝트 설정을 저장했습니다');
+  renderAdmin();
+}
+async function clearNotice(){
+  if(!await modalConfirm('주의사항을 제거할까요?')) return;
+  CONFIG.notice='';
+  await saveConfig(); toast('주의사항을 제거했습니다'); renderAdmin();
+}
+async function unlockSubmission(mid, name){
+  if(!await modalConfirm(`"${name}" 님의 제출 잠금을 해제할까요?\n해제하면 이 분이 다시 평가할 수 있습니다.`,'해제','취소')) return;
+  await backendRefresh();
+  delete SUBMITTED[mid];
+  await replaceSubmitted();
+  toast(`${name} 님의 제출 잠금을 해제했습니다`);
+  renderAdmin();
+}
+
+const APPS_SCRIPT_CODE = `// ===== 다면 상호평가 공용 저장소 =====
+function dataSheet_() {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sh = ss.getSheetByName('_data');
+  if (!sh) {
+    sh = ss.insertSheet('_data');
+    sh.getRange(1, 1).setValue('key');
+    sh.getRange(1, 2).setValue('value');
+  }
+  return sh;
+}
+
+function readBlob_(key) {
+  var sh = dataSheet_();
+  var values = sh.getDataRange().getValues();
+  for (var i = 1; i < values.length; i++) {
+    if (values[i][0] === key) {
+      try { return JSON.parse(values[i][1]); } catch (e) { return null; }
+    }
+  }
+  return null;
+}
+
+function writeBlob_(key, obj) {
+  var sh = dataSheet_();
+  var values = sh.getDataRange().getValues();
+  var str = JSON.stringify(obj);
+  for (var i = 1; i < values.length; i++) {
+    if (values[i][0] === key) {
+      sh.getRange(i + 1, 2).setValue(str);
+      return;
+    }
+  }
+  sh.appendRow([key, str]);
+}
+
+function readRoster_() {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sh = ss.getSheetByName('명단');
+  if (!sh) return [];
+  var values = sh.getDataRange().getValues();
+  var rows = [];
+  for (var i = 0; i < values.length; i++) {
+    var team = (values[i][0] || '').toString().trim();
+    var name = (values[i][1] || '').toString().trim();
+    var phone = (values[i][2] || '').toString().trim();
+    var birth = (values[i][3] || '').toString().trim();
+    // skip empty rows and a header row like "팀/이름"
+    if (!team && !name) continue;
+    if (i === 0 && (name === '이름' || team === '팀')) continue;
+    rows.push({ team: team, name: name, phone: phone, birth: birth });
+  }
+  return rows;
+}
+
+function doGet(e) {
+  var out = {
+    config: readBlob_('config') || {},
+    responses: readBlob_('responses') || {},
+    submitted: readBlob_('submitted') || {},
+    roster: readRoster_()
+  };
+  return ContentService.createTextOutput(JSON.stringify(out))
+    .setMimeType(ContentService.MimeType.JSON);
+}
+
+function doPost(e) {
+  var lock = LockService.getScriptLock();
+  lock.waitLock(30000);
+  try {
+    var data = JSON.parse(e.postData.contents);
+    var kind = data.kind;
+    var payload = data.payload;
+    var mode = data.mode || 'merge';
+    if (kind === 'config') {
+      writeBlob_('config', payload);
+    } else if (kind === 'responses' || kind === 'submitted') {
+      if (mode === 'replace') {
+        // operator deletions: overwrite the whole blob
+        var clean = {};
+        for (var rk in payload) { if (rk !== 'null' && rk !== '' && rk != null) clean[rk] = payload[rk]; }
+        writeBlob_(kind, clean);
+      } else {
+        // merge per-key so concurrent submitters never overwrite each other
+        var existing = readBlob_(kind) || {};
+        for (var k in payload) {
+          if (k === 'null' || k === '' || k == null) continue;
+          existing[k] = payload[k];
+        }
+        if (existing['null'] !== undefined) delete existing['null'];
+        writeBlob_(kind, existing);
+      }
+    }
+    return ContentService.createTextOutput(JSON.stringify({ ok: true }))
+      .setMimeType(ContentService.MimeType.JSON);
+  } catch (err) {
+    return ContentService.createTextOutput(JSON.stringify({ ok: false, error: String(err) }))
+      .setMimeType(ContentService.MimeType.JSON);
+  } finally {
+    lock.releaseLock();
+  }
+}
+
+function testWrite() {
+  writeBlob_('config', { test: 'ok', time: new Date().toString() });
+}`;
+
+function copyScript(){
+  navigator.clipboard.writeText(APPS_SCRIPT_CODE)
+    .then(()=>toast('코드를 복사했어요. Apps Script에 붙여넣으세요'))
+    .catch(()=>{
+      // fallback: show code in modal input for manual copy
+      modalPrompt('아래 코드를 전체 선택(Ctrl+A)해 복사하세요:', APPS_SCRIPT_CODE);
+    });
+}
+
+/* ================= EVALUATE ================= */
+let evalState={teamId:null,selfId:null};
+let noticeAgreed=false;
+let curTargetIdx=0; // which teammate is currently being evaluated (one-at-a-time)
+function renderEval(){
+  const v=$('#view-eval');
+  if(CONFIG.teams.length===0||CONFIG.questions.length===0){
+    v.innerHTML=`<div class="empty"><span class="big">🗳️</span>아직 평가 준비가 되지 않았습니다.<br>관리자 탭에서 팀과 문항을 먼저 등록해 주세요.</div>`;
+    return;
+  }
+  // step 0: notice + agreement (before identity, only if a notice is set and not yet agreed)
+  if(CONFIG.notice && !noticeAgreed && !evalState.selfId){
+    v.innerHTML=`<h2 class="section">평가 전 주의사항</h2>
+      <div class="card">
+        <div style="white-space:pre-line;font-size:14.5px;line-height:1.7;color:var(--ink)">${esc(CONFIG.notice)}</div>
+      </div>
+      <label style="display:flex;align-items:center;gap:9px;font-size:14.5px;font-weight:600;cursor:pointer;margin:4px 2px 14px">
+        <input type="checkbox" id="agreeChk" style="width:19px;height:19px;cursor:pointer" onchange="$('#agreeBtn').disabled=!this.checked">
+        위 주의사항을 모두 읽었으며 이에 동의합니다.
+      </label>
+      <button class="btn" id="agreeBtn" disabled onclick="agreeNotice()">동의하고 평가 시작하기</button>`;
+    return;
+  }
+  // step 1: identify self
+  if(!evalState.selfId){
+    // if any member has phone or birth registered, use info-based login
+    const usesInfo = CONFIG.teams.some(t=>t.members.some(m=>normPhone(m.phone)||normBirth(m.birth)));
+    if(usesInfo){
+      let h=`<h2 class="section">정보를 입력하세요</h2>
+      <p class="hint">본인의 <b>이름 · 핸드폰 번호 · 생년월일</b>을 입력하면 본인 확인 후 소속 팀이 자동으로 선택되어 평가가 시작됩니다.</p>
+      <div class="card" style="max-width:420px">
+        <label class="fld">이름</label>
+        <input type="text" id="loginName" placeholder="예: 홍길동" style="margin-bottom:12px" autofocus
+          onkeydown="if(event.key==='Enter')loginByInfo()">
+        <label class="fld">핸드폰 번호</label>
+        <input type="tel" id="loginPhone" placeholder="예: 010-1234-5678" style="margin-bottom:12px"
+          onkeydown="if(event.key==='Enter')loginByInfo()">
+        <label class="fld">생년월일</label>
+        <input type="text" id="loginBirth" placeholder="예: 901225 또는 1990-12-25" style="margin-bottom:16px"
+          onkeydown="if(event.key==='Enter')loginByInfo()">
+        <button class="btn" onclick="loginByInfo()">본인 확인 후 평가 시작</button>
+      </div>`;
+      v.innerHTML=h;
+      return;
+    }
+    // fallback: team + name select (only when no info registered)
+    let h=`<h2 class="section">본인 확인</h2><p class="hint">소속 팀과 본인 이름을 선택하세요. 본인을 제외한 같은 팀원을 평가하게 됩니다.</p>
+    <div class="card">
+      <label class="fld">소속 팀</label>
+      <select id="selTeam" onchange="onTeamPick()">
+        <option value="">— 팀 선택 —</option>
+        ${CONFIG.teams.map(t=>`<option value="${t.id}">${esc(t.name)}</option>`).join('')}
+      </select>
+      <div id="selfPick"></div>
+    </div>`;
+    v.innerHTML=h;
+    return;
+  }
+  // step 2: evaluate
+  const team=CONFIG.teams.find(t=>t.id===evalState.teamId);
+  const me=team.members.find(m=>m.id===evalState.selfId);
+  const targets=team.members.filter(m=>m.id!==evalState.selfId);
+  // display from saved responses + live draft (draft wins). This keeps in-progress
+  // answers visible when navigating between people.
+  const savedResp=(RESPONSES[evalState.selfId]||{});
+  const myResp={};
+  Object.keys(savedResp).forEach(tid=>{ myResp[tid]={...savedResp[tid]}; });
+  Object.keys(draft).forEach(tid=>{ myResp[tid]={...(myResp[tid]||{}), ...draft[tid]}; });
+
+  let h=`<h2 class="section">${esc(me.name)} 님의 평가</h2>
+  <p class="hint">${esc(team.name)} · 본인 제외 ${targets.length}명 평가 · 입력 후 <b>제출</b>을 누르면 저장됩니다.
+    <button class="btn ghost sm" style="margin-left:6px" onclick="resetSelf()">본인 변경</button></p>`;
+
+  if(targets.length===0 && !CONFIG.questions.some(q=>q.selfQ)){
+    h+=`<div class="empty">평가할 다른 팀원이 없습니다.</div>`;
+    v.innerHTML=h; return;
+  }
+
+  // clamp index
+  if(curTargetIdx<0) curTargetIdx=0;
+
+  // separate self-questions from peer-evaluation questions
+  const selfQs = CONFIG.questions.filter(q=>q.selfQ);
+  const peerQs = CONFIG.questions.filter(q=>!q.selfQ);
+  const hasSelf = selfQs.length>0;
+
+  // build page list: [self page?] + one page per target
+  const pages=[];
+  if(hasSelf) pages.push({type:'self'});
+  targets.forEach((t,i)=>pages.push({type:'target', tg:t, ti:i}));
+  // if there are no peer questions, only the self page remains
+  const totalPages=pages.length;
+  if(curTargetIdx>totalPages-1) curTargetIdx=totalPages-1;
+  const page=pages[curTargetIdx];
+
+  // progress dots
+  let dots='';
+  pages.forEach((pg,i)=>{
+    let done=false, label='';
+    if(pg.type==='self'){ done = myResp[SELF_TID] && Object.keys(myResp[SELF_TID]).length>0; label='나'; }
+    else { done = myResp[pg.tg.id] && Object.keys(myResp[pg.tg.id]).length>0; label=String(i+1- (hasSelf?0:0)); }
+    const cls = i===curTargetIdx ? 'cur' : (done?'done':'');
+    const txt = pg.type==='self' ? '👤' : (hasSelf? i : i+1);
+    dots+=`<button class="pdot ${cls}" onclick="gotoTarget(${i})" title="${pg.type==='self'?'본인 응답':esc(pg.tg.name)}">${txt}</button>`;
+  });
+  h+=`<div class="pdots">${dots}</div>
+      <div class="pcount">${curTargetIdx+1} / ${totalPages} · ${page.type==='self'?'본인 응답':esc(page.tg.name)+' 평가'}</div>`;
+
+  if(page.type==='self'){
+    h+=`<div class="person-eval" data-target="${SELF_TID}">
+        <div class="person-head" style="background:linear-gradient(135deg,#0ea5a4,#0369a1)">👤 ${esc(me.name)} 님 본인에 대한 질문</div>
+        <div class="person-body">`;
+    h+=renderQuestionsFor({id:SELF_TID, name:me.name}, myResp, selfQs);
+    h+=`</div></div>`;
+  } else {
+    const tg=page.tg;
+    h+=`<div class="person-eval" data-target="${tg.id}">
+        <div class="person-head">${esc(tg.name)} 평가</div>
+        <div class="person-body">`;
+    h+=renderQuestionsFor(tg, myResp, peerQs);
+    h+=`</div></div>`;
+  }
+
+  // navigation buttons
+  const isLast = curTargetIdx===totalPages-1;
+  const hasReq=CONFIG.questions.some(q=>!q.optional);
+  h+=`<div class="row" style="margin-top:14px;align-items:center;gap:8px">`;
+  if(curTargetIdx>0) h+=`<button class="btn ghost" onclick="prevTarget()">← 이전</button>`;
+  if(!isLast) h+=`<button class="btn" onclick="nextTarget()">다음 →</button>`;
+  else h+=`<button class="btn" onclick="submitEval()">✓ 평가 제출</button>`;
+  h+=`</div>`;
+  if(hasReq) h+=`<p class="hint" style="margin-top:8px"><span class="req-star">*</span> 표시는 필수 응답 항목입니다.</p>`;
+  v.innerHTML=h;
+}
+
+// render questions for one page; qList lets caller pass self-questions or peer-questions
+function renderQuestionsFor(tg, myResp, qList){
+  let h='';
+  (qList||CONFIG.questions).forEach(q=>{
+    const saved=(myResp[tg.id]||{})[q.id];
+    const fu=!!q.followUp;
+    h+=`<div class="qrow${fu?' qrow-follow':''}">`;
+    if(fu) h+=`<div class="follow-tag">↳ 이어지는 질문</div>`;
+    h+=`<div class="q-title" style="font-size:14px;margin-bottom:2px">${esc(q.title)}${q.optional?'':' <span class="req-star">*</span>'}</div>`;
+    if(q.type==='score'){
+      h+=`<div class="scale" data-q="${q.id}" data-t="${tg.id}">`;
+      for(let n=q.min;n<=q.max;n++){
+        h+=`<button class="${saved==n?'sel':''}" onclick="pickScore(this,'${tg.id}','${q.id}',${n})">${n}</button>`;
+      }
+      h+=`</div>`;
+    } else if(q.type==='likert'){
+      const sv = (saved&&typeof saved==='object')?saved:{};
+      const n=q.scale.length;
+      function lkScore(si){ return n-si; }
+      function lkLeft(si){ return n===1?50:((lkScore(si)-1)/(n-1))*100; }
+      function lkHue(si){ return ((lkScore(si)-1)/(n-1||1))*120; }
+      h+=`<div class="lk-scale-head"><div class="lk-scale-inner">`;
+      q.scale.forEach((s,si)=>{
+        const score=lkScore(si), hue=lkHue(si), left=lkLeft(si);
+        const lbl=(s||'').trim();
+        h+=`<div class="lk-scale-lbl" style="left:${left}%"><span class="lk-score" style="background:hsl(${hue},48%,44%)">${score}</span>${lbl?`<span class="lk-scale-txt" style="color:hsl(${hue},42%,36%)">${esc(lbl)}</span>`:''}</div>`;
+      });
+      h+=`</div></div>`;
+      q.items.forEach((it,ii)=>{
+        h+=`<div class="lk-item">
+              <div class="lk-item-name">${esc(it)}</div>
+              <div class="lk-track">
+                <div class="lk-line"></div>`;
+        q.scale.forEach((s,si)=>{
+          const score=lkScore(si);
+          // value is stored as the score number; (legacy: may be the label string)
+          const on = (sv[ii]===score) || (sv[ii]===s && s!=='');
+          const hue=lkHue(si), left=lkLeft(si);
+          h+=`<button type="button" class="lk-node ${on?'sel':''}" style="left:${left}%;--c:hsl(${hue},58%,46%)"
+                title="${esc((s||'').trim()||('점수 '+score))}"
+                onclick="pickLikert(this,'${tg.id}','${q.id}',${ii},${score})"></button>`;
+        });
+        h+=`</div></div>`;
+      });
+    } else if(q.type==='text'){
+      h+=`<textarea data-q="${q.id}" data-t="${tg.id}" placeholder="자유롭게 작성">${esc(saved||'')}</textarea>`;
+    } else {
+      const maxSel=q.maxSelect||1;
+      const sel = maxSel>1 ? (Array.isArray(saved)?saved:(saved?[saved]:[])) : saved;
+      h+=`<div data-q="${q.id}" data-t="${tg.id}">`;
+      const ruleTxt=choiceRuleText(q);
+      if(maxSel>1 && ruleTxt) h+=`<div class="hint" style="margin:0 0 6px">${esc(ruleTxt)}</div>`;
+      q.options.forEach((o,oi)=>{
+        const on = maxSel>1 ? sel.includes(o.label) : (sel===o.label);
+        const shape = maxSel>1 ? 'choice-check' : 'choice-radio';
+        h+=`<div class="choice-opt ${on?'sel':''}" onclick="${maxSel>1?'pickMulti':'pickChoice'}(this,'${tg.id}','${q.id}','${esc(o.label).replace(/'/g,"\\'")}',${maxSel})">
+          <div class="${shape}"></div>
+          ${o.img?`<img src="${esc(o.img)}" onerror="this.style.display='none'">`:''}
+          <span>${esc(o.label)}</span></div>`;
+      });
+      h+=`</div>`;
+    }
+    h+=`</div>`;
+  });
+  return h;
+}
+// save the textareas currently on screen into draft (so navigation doesn't lose them)
+function captureOpenTextareas(){
+  document.querySelectorAll('#view-eval textarea[data-q]').forEach(ta=>{
+    const v=ta.value.trim();
+    if(v) setDraft(ta.dataset.t, ta.dataset.q, v);
+  });
+}
+function gotoTarget(i){ captureOpenTextareas(); curTargetIdx=i; renderEval(); window.scrollTo({top:0,behavior:'smooth'}); }
+function nextTarget(){ captureOpenTextareas(); curTargetIdx++; renderEval(); window.scrollTo({top:0,behavior:'smooth'}); }
+function prevTarget(){ captureOpenTextareas(); curTargetIdx--; renderEval(); window.scrollTo({top:0,behavior:'smooth'}); }
+
+const PREVIEW_TID='__preview__';
+function openPreview(){
+  if(!CONFIG.questions.length){ toast('먼저 문항을 추가하세요'); return; }
+  // fake person; clicks write to draft[__preview__] which we discard on close
+  const fakeTarget={id:PREVIEW_TID, name:'홍길동 (예시)'};
+  const body=$('#previewBody');
+  let h=`<p class="hint" style="margin-bottom:12px">평가자에게 이렇게 보입니다. 버튼·슬라이더를 눌러봐도 <b>저장되지 않아요.</b></p>
+    <div class="person-eval"><div class="person-head">${esc(fakeTarget.name)} 평가</div>
+    <div class="person-body">`;
+  h+=renderQuestionsFor(fakeTarget, {}, CONFIG.questions); // all questions, empty responses
+  h+=`</div></div>`;
+  body.innerHTML=h;
+  $('#preview').classList.add('show');
+}
+function closePreview(){
+  if(draft[PREVIEW_TID]) delete draft[PREVIEW_TID]; // discard throwaway preview answers
+  $('#preview').classList.remove('show');
+}
+function onTeamPick(){
+  const tid=$('#selTeam').value;
+  const wrap=$('#selfPick');
+  if(!tid){ wrap.innerHTML=''; return; }
+  const t=CONFIG.teams.find(x=>x.id===tid);
+  wrap.innerHTML=`<label class="fld" style="margin-top:14px">본인 이름</label>
+    <select id="selSelf">
+      <option value="">— 이름 선택 —</option>
+      ${t.members.map(m=>`<option value="${m.id}">${esc(m.name)}</option>`).join('')}
+    </select>
+    <div class="row" style="margin-top:14px">
+      <button class="btn" onclick="confirmSelf('${tid}')">평가 시작</button>
+    </div>`;
+}
+async function confirmSelf(tid){
+  const sid=$('#selSelf').value;
+  if(!sid) return toast('본인 이름을 선택하세요');
+  if(SUBMITTED[sid]){ toast('이미 평가를 제출하셨습니다. 다시 평가할 수 없습니다.'); return; }
+  evalState={teamId:tid,selfId:sid};
+  draft={};
+  curTargetIdx=0;
+  renderEval();
+}
+function resetSelf(){ evalState={teamId:null,selfId:null}; draft={}; noticeAgreed=false; curTargetIdx=0; renderEval(); }
+function agreeNotice(){ noticeAgreed=true; renderEval(); }
+
+function loginByInfo(){
+  const name=($('#loginName').value||'').trim();
+  const phone=($('#loginPhone').value||'').trim();
+  const birth=($('#loginBirth').value||'').trim();
+  if(!name) return toast('이름을 입력하세요');
+  if(!normPhone(phone)) return toast('핸드폰 번호를 입력하세요');
+  if(!normBirth(birth)) return toast('생년월일을 입력하세요');
+  const found=findMemberByInfo(name,phone,birth);
+  if(!found){ toast('일치하는 정보가 없습니다. 입력 내용을 다시 확인하거나 관리자에게 문의하세요'); return; }
+  if(SUBMITTED[found.member.id]){
+    toast(`${found.member.name} 님은 이미 평가를 제출하셨습니다.`);
+    return;
+  }
+  evalState={teamId:found.team.id, selfId:found.member.id};
+  draft={};
+  curTargetIdx=0;
+  toast(`${found.member.name} 님, 본인 확인되었습니다`);
+  renderEval();
+}
+
+let draft={}; // draft[targetId][qId]=value (working copy before submit)
+const SELF_TID='__self__'; // key for the evaluator's own answers
+let _submitting=false;
+function ensureDraftFromSaved(){
+  const saved=RESPONSES[evalState.selfId]||{};
+  // start draft from saved so partial edits persist visually
+  draft=JSON.parse(JSON.stringify(saved));
+}
+function setDraft(tid,qid,val){
+  if(!draft[tid]) draft[tid]={};
+  draft[tid][qid]=val;
+}
+function pickScore(btn,tid,qid,n){
+  btn.parentElement.querySelectorAll('button').forEach(b=>b.classList.remove('sel'));
+  btn.classList.add('sel');
+  setDraft(tid,qid,n);
+}
+function pickChoice(el,tid,qid,label){
+  el.parentElement.querySelectorAll('.choice-opt').forEach(c=>c.classList.remove('sel'));
+  el.classList.add('sel');
+  setDraft(tid,qid,label);
+}
+function choiceRuleText(q){
+  const n=q.options.length;
+  const mx=q.maxSelect||1;
+  const mn=(q.minSelect===undefined)?(mx>1?0:1):q.minSelect;
+  if(mx<=1 && mn<=1) return ''; // plain single select, no guidance needed
+  if(mn===mx) return `${mn}개를 선택해주세요`;
+  if(mn<=0 || (mn<=1 && mx<n)) return `최대 ${mx}개까지 선택해주세요`;
+  if(mx>=n && mn>0) return `최소 ${mn}개 이상 선택해주세요`;
+  return `최소 ${mn}개 ~ 최대 ${mx}개 선택해주세요`;
+}
+function pickMulti(el,tid,qid,label,maxSel){
+  // re-read the authoritative limit from the question config
+  const q=CONFIG.questions.find(x=>x.id===qid);
+  const limit=(q && q.maxSelect) ? q.maxSelect : (parseInt(maxSel)||1);
+  // current selection from draft or saved
+  if(!draft[tid]) draft[tid]={};
+  let arr = draft[tid][qid];
+  if(!Array.isArray(arr)){
+    const sv=((RESPONSES[evalState.selfId]||{})[tid]||{})[qid];
+    arr = Array.isArray(sv)?[...sv]:(sv?[sv]:[]);
+  }
+  const idx=arr.indexOf(label);
+  if(idx>=0){
+    arr.splice(idx,1); // toggle off
+    el.classList.remove('sel');
+  } else {
+    if(arr.length>=limit){ toast(`최대 ${limit}개까지 선택할 수 있습니다`); return; }
+    arr.push(label);
+    el.classList.add('sel');
+  }
+  draft[tid][qid]=arr;
+}
+function pickLikert(node,tid,qid,itemIdx,score){
+  // clear other nodes on the same track
+  const track=node.parentElement;
+  track.querySelectorAll('.lk-node').forEach(c=>c.classList.remove('sel'));
+  node.classList.add('sel');
+  // store as object keyed by item index; value = score number
+  if(!draft[tid]) draft[tid]={};
+  let obj = draft[tid][qid];
+  if(!obj || typeof obj!=='object'){
+    const savedObj=((RESPONSES[evalState.selfId]||{})[tid]||{})[qid];
+    obj = (savedObj&&typeof savedObj==='object')?{...savedObj}:{};
+  }
+  obj[itemIdx]=score;
+  draft[tid][qid]=obj;
+}
+function isAnswered(q, val){
+  if(val===undefined||val===null||val==='') return false;
+  if(q.type==='likert'){
+    if(typeof val!=='object'||Array.isArray(val)) return false;
+    // every item must have a selection
+    return q.items.every((it,ii)=> val[ii]!==undefined && val[ii]!=='');
+  }
+  if(q.type==='choice'){
+    const arr = Array.isArray(val) ? val : (val!=='' && val!=null ? [val] : []);
+    const mx=q.maxSelect||1;
+    const mn=(q.minSelect===undefined)?(mx>1?0:1):q.minSelect;
+    if(arr.length < mn) return false;   // below the required minimum
+    return arr.length>0;                // a required question needs at least 1 pick
+  }
+  return true;
+}
+async function submitEval(){
+  // gather text answers from DOM
+  document.querySelectorAll('#view-eval textarea[data-q]').forEach(ta=>{
+    const v=ta.value.trim();
+    if(v) setDraft(ta.dataset.t, ta.dataset.q, v);
+  });
+
+  const team=CONFIG.teams.find(t=>t.id===evalState.teamId);
+  const targets=team.members.filter(m=>m.id!==evalState.selfId);
+  const savedSelf=RESPONSES[evalState.selfId]||{};
+  const selfQs = CONFIG.questions.filter(q=>q.selfQ);
+  const peerQs = CONFIG.questions.filter(q=>!q.selfQ);
+  const hasSelf = selfQs.length>0;
+
+  // helper to jump to a page index and warn
+  function fail(pageIdx, name, q, merged){
+    curTargetIdx=pageIdx;
+    renderEval();
+    window.scrollTo({top:0,behavior:'smooth'});
+    if(q.type==='choice'){
+      const v=merged[q.id];
+      const cnt=Array.isArray(v)?v.length:(v?1:0);
+      const mx=q.maxSelect||1;
+      const mn=(q.minSelect===undefined)?(mx>1?0:1):q.minSelect;
+      if(cnt>0 && mn>1){ toast(`${name}: 「${q.title}」 최소 ${mn}개 이상 선택해주세요`); return; }
+    }
+    toast(`${name}: 「${q.title}」 응답이 필요합니다`);
+  }
+
+  // validate self-questions (page 0 if present)
+  if(hasSelf){
+    const merged={...(savedSelf[SELF_TID]||{}), ...(draft[SELF_TID]||{})};
+    for(const q of selfQs){
+      if(!q.optional && !isAnswered(q, merged[q.id])){ fail(0, '본인 응답', q, merged); return; }
+    }
+  }
+
+  // validate peer questions for every target
+  for(let ti=0; ti<targets.length; ti++){
+    const tg=targets[ti];
+    const merged={...(savedSelf[tg.id]||{}), ...(draft[tg.id]||{})};
+    const pageIdx = (hasSelf?1:0)+ti;
+    for(const q of peerQs){
+      if(!q.optional && !isAnswered(q, merged[q.id])){ fail(pageIdx, `"${tg.name}" 님`, q, merged); return; }
+    }
+  }
+
+  if(Object.keys(draft).length===0 && Object.keys(savedSelf).length===0)
+    return toast('입력된 평가가 없습니다');
+
+  // confirm before final submit
+  if(!await modalConfirm('정말로 제출하시겠습니까?\n제출하면 평가가 최종 저장되고 첫 화면으로 돌아갑니다.','예','아니오')) return;
+
+  // safety: must have a valid identity
+  if(!evalState.selfId){ toast('본인 인증 정보가 없습니다. 처음부터 다시 시작해 주세요.'); resetSelf(); return; }
+
+  if(_submitting) return; // prevent double submit
+  _submitting=true;
+  showBusy('제출 중입니다…');
+  try{
+    // CRITICAL: pull the latest shared data first so we don't overwrite others' submissions
+    await backendRefresh();
+
+    // merge my answers into the freshly-loaded responses
+    if(!RESPONSES[evalState.selfId]) RESPONSES[evalState.selfId]={};
+    for(const tid in draft){
+      RESPONSES[evalState.selfId][tid]={...(RESPONSES[evalState.selfId][tid]||{}),...draft[tid]};
+    }
+    SUBMITTED[evalState.selfId]=true;
+    // save both, sequentially
+    await saveResponses();
+    await saveSubmitted();
+    // give the sheet a moment to finish writing (no-cors is fire-and-forget)
+    await new Promise(r=>setTimeout(r,800));
+  } finally {
+    _submitting=false;
+    hideBusy();
+  }
+  toast('평가가 제출되었습니다 ✓');
+  // return to the very first screen (logout this evaluator)
+  evalState={teamId:null,selfId:null};
+  draft={};
+  noticeAgreed=false;
+  curTargetIdx=0;
+  renderEval();
+}
+
+/* ================= RESULT ================= */
+function renderResult(){
+  const v=$('#view-result');
+  // count total stored evaluations regardless of lock state
+  let totalPairs=0;
+  for(const evId in RESPONSES){ totalPairs += Object.keys(RESPONSES[evId]||{}).length; }
+  const countLine=`<p class="hint" style="margin-bottom:14px">💾 현재 저장된 평가: <b>${totalPairs}건</b></p>`;
+  // results are admin-only — always require the password
+  if(!adminUnlocked){
+    v.innerHTML=`<h2 class="section">🔒 결과 잠금</h2>
+      ${countLine}
+      <p class="hint">평가 결과는 관리자만 확인할 수 있습니다. 관리자 비밀번호를 입력하세요.</p>
+      <div class="card" style="max-width:340px">
+        <label class="fld">비밀번호</label>
+        <input type="password" id="resPw" class="pin-input" style="max-width:none;margin-bottom:10px"
+          onkeydown="if(event.key==='Enter')tryUnlockResult()" autofocus>
+        <button class="btn" onclick="tryUnlockResult()">잠금 해제</button>
+      </div>`;
+    return;
+  }
+  if(CONFIG.questions.length===0){
+    v.innerHTML=`<div class="empty"><span class="big">📊</span>문항이 없습니다.</div>`; return;
+  }
+  // collect: for each evaluatee, gather all answers from all evaluators
+  let h=`<h2 class="section">평가 결과</h2>
+    <p class="hint">피평가자별 집계입니다. 점수형·척도형은 평균, 객관식은 응답 분포, 주관식은 코멘트 모음으로 표시됩니다.
+    현재 저장된 평가: <b>${totalPairs}건</b>
+    <button class="btn ghost sm" style="margin-left:6px" onclick="reloadResults()">🔄 새로고침</button>
+    ${totalPairs>0?`<button class="btn danger sm" style="margin-left:4px" onclick="deleteResults()">🗑 평가 결과 삭제</button>`:''}</p>`;
+
+  // ---- 본인 응답(self questions) section ----
+  const selfQs=CONFIG.questions.filter(q=>q.selfQ);
+  if(selfQs.length){
+    // gather each evaluator's self answers
+    const selfRows=[];
+    for(const evId in RESPONSES){
+      const sa=RESPONSES[evId][SELF_TID];
+      if(sa && Object.keys(sa).length){
+        const info=findMember(evId);
+        selfRows.push({name:info?info.member.name:'(알수없음)', team:info?info.team.name:'', ans:sa});
+      }
+    }
+    h+=`<h2 class="section" style="font-size:18px">👤 본인 응답 (평가자 자기 응답)</h2>`;
+    if(!selfRows.length){
+      h+=`<div class="card"><span class="hint">아직 본인 응답이 없습니다.</span></div>`;
+    } else {
+      h+=`<div class="card">`;
+      selfQs.forEach(q=>{
+        h+=`<div class="res-q"><div class="lbl">${esc(q.title)}</div>`;
+        selfRows.forEach(r=>{
+          const a=r.ans[q.id];
+          let disp='—';
+          if(a!==undefined && a!=='' && a!==null){
+            if(q.type==='likert' && typeof a==='object'){
+              disp=q.items.map((it,ii)=>`${esc(it)}: ${a[ii]!==undefined?esc(String(a[ii]))+'점':'-'}`).join(' / ');
+            } else if(Array.isArray(a)){ disp=esc(a.join(', ')); }
+            else { disp=esc(String(a)); }
+          }
+          h+=`<div class="quote"><b>${esc(r.name)}</b> ${r.team?`<span class="hint" style="margin:0">(${esc(r.team)})</span>`:''}<br>${disp}</div>`;
+        });
+        h+=`</div>`;
+      });
+      h+=`</div>`;
+    }
+  }
+
+  let any=false;
+  CONFIG.teams.forEach(team=>{
+    let teamHasData=false;
+    let teamHtml=`<h2 class="section" style="font-size:18px">🏷️ ${esc(team.name)}</h2>`;
+    team.members.forEach(target=>{
+      // gather answers about this target
+      const incoming=[]; // {evId, evaluatorName, answers}
+      for(const evId in RESPONSES){
+        if(RESPONSES[evId][target.id]){
+          const info=findMember(evId);
+          incoming.push({evId, name:info?info.member.name:'(알수없음)', ans:RESPONSES[evId][target.id]});
+        }
+      }
+      if(incoming.length===0) return;
+      teamHasData=true; any=true;
+      teamHtml+=`<div class="card res-person">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;gap:8px;flex-wrap:wrap">
+          <div style="font-family:'Be Vietnam Pro',sans-serif;font-size:19px;font-weight:700">${esc(target.name)}</div>
+          <div class="row" style="margin:0">
+            <span class="hint" style="margin:0">평가자 ${incoming.length}명</span>
+            <button class="btn danger sm" onclick="deleteTargetResults('${target.id}','${esc(target.name).replace(/'/g,"\\'")}')">이 결과 삭제</button>
+          </div>
+        </div>
+        <details class="adv" style="margin-bottom:8px"><summary>평가자별 응답 관리 (개별 삭제)</summary>
+          <div style="margin-top:6px">`;
+      incoming.forEach(x=>{
+        teamHtml+=`<div class="row" style="margin:3px 0;align-items:center">
+          <span style="flex:1;font-size:13px">· ${esc(x.name)} 님의 평가</span>
+          <button class="btn danger sm" onclick="deleteOneResult('${x.evId}','${target.id}','${esc(x.name).replace(/'/g,"\\'")}','${esc(target.name).replace(/'/g,"\\'")}')">삭제</button>
+        </div>`;
+      });
+      teamHtml+=`</div></details>`;
+      CONFIG.questions.forEach(q=>{
+        teamHtml+=`<div class="res-q"><div class="lbl">${esc(q.title)}</div>`;
+        if(q.type==='score'){
+          const vals=incoming.map(x=>x.ans[q.id]).filter(x=>typeof x==='number');
+          if(vals.length===0){ teamHtml+=`<span class="hint">응답 없음</span>`; }
+          else{
+            const avg=vals.reduce((a,b)=>a+b,0)/vals.length;
+            const pct=((avg-q.min)/(q.max-q.min))*100;
+            teamHtml+=`<div class="bar-wrap">
+              <span class="avg-big">${avg.toFixed(2)}</span>
+              <div class="bar-track" style="margin:0 6px"><div class="bar-fill" style="width:${pct}%"></div></div>
+              <span class="hint" style="margin:0">/ ${q.max} (n=${vals.length})</span></div>`;
+            // per evaluator
+            teamHtml+=`<details class="adv"><summary>평가자별 점수 보기</summary>`;
+            incoming.forEach(x=>{ if(typeof x.ans[q.id]==='number')
+              teamHtml+=`<div class="bar-wrap"><span class="bar-name">${esc(x.name)}</span><span class="bar-val">${x.ans[q.id]}점</span></div>`; });
+            teamHtml+=`</details>`;
+          }
+        } else if(q.type==='likert'){
+          const n=q.scale.length;
+          // value is now a score number; legacy data may be a label string
+          const labelScore={}; q.scale.forEach((s,i)=>{ if(s) labelScore[s]=n-i; });
+          function toScore(v){
+            if(typeof v==='number') return v;
+            if(typeof v==='string' && labelScore[v]!==undefined) return labelScore[v];
+            const num=parseInt(v); return isNaN(num)?null:num;
+          }
+          let anyItem=false;
+          q.items.forEach((it,ii)=>{
+            const vals=[];
+            incoming.forEach(x=>{
+              const a=x.ans[q.id];
+              if(a&&typeof a==='object'&&a[ii]!==undefined&&a[ii]!==''){
+                const sc=toScore(a[ii]);
+                if(sc!==null) vals.push(sc);
+              }
+            });
+            if(vals.length===0) return;
+            anyItem=true;
+            const avg=vals.reduce((a,b)=>a+b,0)/vals.length;
+            const pct=((avg-1)/(n-1))*100;
+            teamHtml+=`<div class="bar-wrap"><span class="bar-name" style="width:auto;flex-basis:auto;max-width:55%">${esc(it)}</span>
+              <div class="bar-track"><div class="bar-fill" style="width:${pct}%"></div></div>
+              <span class="bar-val">${avg.toFixed(2)}</span></div>`;
+          });
+          teamHtml+=`<div class="hint" style="margin-top:4px">※ 점수 범위: 1 ~ ${n}점 (높을수록 긍정)</div>`;
+          if(!anyItem) teamHtml+=`<span class="hint">응답 없음</span>`;
+        } else if(q.type==='choice'){
+          const counts={};
+          q.options.forEach(o=>counts[o.label]=0);
+          let respondents=0;
+          incoming.forEach(x=>{
+            const a=x.ans[q.id];
+            if(a===undefined||a===null||a==='') return;
+            respondents++;
+            if(Array.isArray(a)){ a.forEach(lb=>{ if(counts[lb]!==undefined) counts[lb]++; }); }
+            else if(counts[a]!==undefined){ counts[a]++; }
+          });
+          const totalPicks=Object.values(counts).reduce((a,b)=>a+b,0);
+          if(respondents===0){ teamHtml+=`<span class="hint">응답 없음</span>`; }
+          else{
+            if((q.maxSelect||1)>1) teamHtml+=`<div class="hint" style="margin:0 0 4px">복수 선택 (응답자 ${respondents}명)</div>`;
+            q.options.forEach(o=>{
+              const c=counts[o.label];
+              const pct=respondents?Math.round(c/respondents*100):0;
+              teamHtml+=`<div class="bar-wrap"><span class="bar-name">${esc(o.label)}</span>
+                <div class="bar-track"><div class="bar-fill" style="width:${pct}%"></div></div>
+                <span class="bar-val">${c}명</span></div>`;
+            });
+          }
+        } else {
+          const texts=incoming.map(x=>({n:x.name,t:x.ans[q.id]})).filter(x=>x.t);
+          if(texts.length===0){ teamHtml+=`<span class="hint">응답 없음</span>`; }
+          else texts.forEach(x=>teamHtml+=`<div class="quote"><b>${esc(x.n)}</b><br>${esc(x.t)}</div>`);
+        }
+        teamHtml+=`</div>`;
+      });
+      teamHtml+=`</div>`;
+    });
+    if(teamHasData) h+=teamHtml;
+  });
+
+  if(!any){
+    if(totalPairs>0){
+      // there ARE stored responses, but none matched current team members (IDs changed)
+      h+=`<div class="empty"><span class="big">⚠️</span>저장된 평가는 ${totalPairs}건 있으나, 현재 등록된 인원과 연결되지 않았습니다.<br>
+        <span class="hint">인원을 삭제 후 다시 추가했거나 명단을 다시 불러온 경우 발생할 수 있습니다. 이전 응답은 아래 백업에서 확인하세요.</span><br>
+        <button class="btn ghost sm" style="margin-top:10px" onclick="exportData()">원본 응답 백업(JSON) 내려받기</button></div>`;
+    } else {
+      h+=`<div class="empty"><span class="big">📭</span>아직 제출된 평가가 없습니다.</div>`;
+    }
+  }
+  v.innerHTML=h;
+}
+
+/* ================= INIT ================= */
+function applyBranding(){
+  const b=$('#brandTitle');
+  if(b){
+    const name = (CONFIG.projectName||'').trim() || '다면 상호평가';
+    b.innerHTML = `${esc(name)}<small>PEER · 360° EVALUATION</small>`;
+  }
+  if(CONFIG.projectName && CONFIG.projectName.trim()){
+    document.title = CONFIG.projectName.trim();
+  }
+  const f=$('#appFooter');
+  if(f){
+    let fh='';
+    if(CONFIG.logoUrl && CONFIG.logoUrl.trim())
+      fh+=`<img src="${esc(CONFIG.logoUrl.trim())}" alt="logo" onerror="this.style.display='none'">`;
+    const ft=(CONFIG.footerText||'').trim();
+    fh+=`<div class="foot-text">${ft?esc(ft):''} <span style="opacity:.5">· v10</span></div>`;
+    f.innerHTML=fh;
+  }
+}
+(async function init(){
+  // 1) instant: show cached data right away (no waiting on Google)
+  await loadLocalFast();
+  const hasCache = (CONFIG.teams&&CONFIG.teams.length) || (CONFIG.questions&&CONFIG.questions.length);
+  if(hasCache){
+    $('#loading').style.display='none';
+    applyBranding();
+    renderEval();
+  }
+  // 2) background: pull the latest shared data, then refresh the screen
+  loadAll().then(()=>{
+    $('#loading').style.display='none';
+    applyBranding();
+    if(currentView==='eval') renderEval();
+    else if(currentView==='result') renderResult();
+    else if(currentView==='admin') renderAdmin();
+  });
+})();
+</script>
+</body>
+</html>
